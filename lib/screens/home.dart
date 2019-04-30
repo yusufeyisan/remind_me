@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -11,6 +12,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _counter = 0;
+  String buttonName = "hello";
 
   @override
   Widget build(BuildContext context) {
@@ -22,123 +24,90 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(
-              onPressed: () {},
-              textColor: Colors.white,
-              padding: const EdgeInsets.all(0.0),
-              child: Container(
-                width: 175,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: FractionalOffset.topCenter,
-                    end: FractionalOffset.bottomCenter,
-                    colors: <Color>[
-                      Color(0xFF38326D),
-                      Color(0xFF6158B9),
-                      Color(0xFF38326D),
-                    ],
-                  ),
-                ),
-                padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                child: Center(
-                    child: Text(
-                  'Upload File',
-                  style: TextStyle(fontSize: 18),
-                )),
-              ),
-            ),
+            new RaisedMenuButton(
+                buttonIcon: Icon(Icons.note_add),
+                buttonName: "Add Word",
+                pressButton: () {
+                  print("add word");
+                  
+                }),
             Container(
-              height: 15,
+              height: 20,
             ),
-            RaisedButton(
-              onPressed: () {},
-              textColor: Colors.white,
-              padding: const EdgeInsets.all(0.0),
-              child: Container(
-                width: 175,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: FractionalOffset.topCenter,
-                    end: FractionalOffset.bottomCenter,
-                    colors: <Color>[
-                      Color(0xFF38326D),
-                      Color(0xFF6158B9),
-                      Color(0xFF38326D),
-                    ],
-                  ),
-                ),
-                padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                child: Center(
-                    child: Text(
-                  'Add Word',
-                  style: TextStyle(fontSize: 18),
-                )),
-              ),
-            ),
+            new RaisedMenuButton(
+                buttonIcon: Icon(Icons.view_list),
+                buttonName: "Show Word List",
+                pressButton: () {
+                  print("show word list");
+                }),
             Container(
-              height: 15,
+              height: 20,
             ),
-            RaisedButton(
-              onPressed: () {},
-              textColor: Colors.white,
-              padding: const EdgeInsets.all(0.0),
-              child: Container(
-                width: 175,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: FractionalOffset.topCenter,
-                    end: FractionalOffset.bottomCenter,
-                    colors: <Color>[
-                      Color(0xFF38326D),
-                      Color(0xFF6158B9),
-                      Color(0xFF38326D),
-                    ],
-                  ),
-                ),
-                padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                child: Center(
-                    child: Text(
-                  'Show Words',
-                  style: TextStyle(fontSize: 18),
-                )),
-              ),
-            ),
-            Container(
-              height: 15,
-            ),
-            RaisedButton(
-              onPressed: () {},
-              textColor: Colors.white,
-              padding: const EdgeInsets.all(0.0),
-              child: Container(
-                width: 175,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: FractionalOffset.topCenter,
-                    end: FractionalOffset.bottomCenter,
-                    colors: <Color>[
-                      Color(0xFF38326D),
-                      Color(0xFF6158B9),
-                      Color(0xFF38326D),
-                    ],
-                  ),
-                ),
-                padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                child: Center(
-                    child: Text(
-                  'Settings',
-                  style: TextStyle(fontSize: 18),
-                )),
-              ),
+            new RaisedMenuButton(
+              buttonIcon: Icon(Icons.settings),
+              buttonName: "Settings",
+              pressButton: () {
+                print("settings");
+              },
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+typedef PressButton = void Function();
+
+class RaisedMenuButton extends StatelessWidget {
+  const RaisedMenuButton({
+    Key key,
+    @required this.buttonIcon,
+    @required this.buttonName,
+    @required this.pressButton,
+  }) : super(key: key);
+
+  final Icon buttonIcon;
+  final String buttonName;
+  final PressButton pressButton;
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      onPressed: pressButton,
+      textColor: Colors.white,
+      padding: const EdgeInsets.all(0.0),
+      shape: new RoundedRectangleBorder(
+          borderRadius: new BorderRadius.circular(30.0)),
+      child: Container(
+          width: 200,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(50.0)),
+            gradient: LinearGradient(
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              colors: <Color>[
+                Color(0xFF38326D),
+                Color(0xFF6158B9),
+                Color(0xFF38326D),
+              ],
+            ),
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+          child: new Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              buttonIcon,
+              Container(
+                width: 10,
+              ),
+              Center(
+                  child: Text(
+                buttonName,
+                style: TextStyle(fontSize: 18),
+              )),
+            ],
+          )),
     );
   }
 }
