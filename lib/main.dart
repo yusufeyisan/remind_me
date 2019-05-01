@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import './screens/home.dart';
 import './screens/add_word.dart';
-
+import './screens/word_list.dart';
 void main() => runApp(RemindMe());
 
 class RemindMe extends StatelessWidget {
@@ -12,7 +12,7 @@ class RemindMe extends StatelessWidget {
     return MaterialApp(
       title: 'Remind Me',
       theme: themeData,
-      home: AddWordPage(),
+      home: WordListPage(),
     );
   }
 
