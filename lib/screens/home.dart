@@ -11,9 +11,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
-  String buttonName = "hello";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,17 +22,16 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             new RaisedMenuButton(
-                buttonIcon: Icon(Icons.note_add),
+                buttonIcon: Icon(Icons.playlist_add),
                 buttonName: "Add Word",
                 pressButton: () {
                   print("add word");
-                  
                 }),
             Container(
               height: 20,
             ),
             new RaisedMenuButton(
-                buttonIcon: Icon(Icons.view_list),
+                buttonIcon: Icon(Icons.menu),
                 buttonName: "Show Word List",
                 pressButton: () {
                   print("show word list");
