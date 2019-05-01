@@ -12,43 +12,45 @@ class Words {
   String third;
   String synonym;
   bool completed;
-  Words(this.word, this.first, this.second, this.third,this.synonym, this.completed);
+  Words(this.word, this.first, this.second, this.third, this.synonym,
+      this.completed);
 }
 
 class _WordListPageState extends State<WordListPage> {
   final TextStyle wordStyle = TextStyle(color: Colors.blue, fontSize: 18);
   final TextStyle descriptionStyle = TextStyle(fontSize: 15, letterSpacing: 1);
-  final TextStyle synonymStyle = TextStyle(fontSize: 15,fontStyle: FontStyle.italic, letterSpacing: 1);
+  final TextStyle synonymStyle =
+      TextStyle(fontSize: 15, fontStyle: FontStyle.italic, letterSpacing: 1);
 
   List<Words> items = [
     //new Words("Happy", "Mutlu", "Neşeli", "Keyifli", false),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-   Words("Dream", "Rüya", "Düş", "Hayal","delusion", true),
-      ];
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+    Words("Dream", "Rüya", "Düş", "Hayal", "delusion", true),
+  ];
 
   update(int index) {
     setState(() {
