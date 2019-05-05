@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './screens/home.dart';
 import './screens/add_word.dart';
 import './screens/word_list.dart';
+import './screens/settings.dart';
 
 void main() => runApp(RemindMe());
 
@@ -12,11 +13,17 @@ class RemindMe extends StatelessWidget {
     return MaterialApp(
       title: 'Remind Me',
       theme: themeData,
-      home: WordListPage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomePage(),
+        '/add_word': (context) => AddWordPage(),
+        '/word_list': (context) => WordListPage(),
+        '/settings': (context) => SettingsPage()
+      },
     );
   }
 
-   static Color primaryColor = new Color(0xFFFFCE00);
+  static Color primaryColor = new Color(0xFFFFCE00);
 
   final ThemeData themeData = ThemeData(
     brightness: Brightness.light,

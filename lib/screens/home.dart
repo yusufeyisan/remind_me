@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
                 buttonName: "Add Word",
                 pressButton: () {
                   print("add word");
+                  Navigator.pushNamed(context, '/add_word');
                 }),
             Container(
               height: 20,
@@ -35,6 +36,7 @@ class _HomePageState extends State<HomePage> {
                 buttonName: "Show Word List",
                 pressButton: () {
                   print("show word list");
+                  Navigator.pushNamed(context, '/word_list');
                 }),
             Container(
               height: 20,
@@ -44,10 +46,27 @@ class _HomePageState extends State<HomePage> {
               buttonName: "Settings",
               pressButton: () {
                 print("settings");
+                Navigator.pushNamed(context, '/settings');
               },
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), title: Text("Settngs")),
+        ],
+        fixedColor: Colors.deepPurple,
+        onTap: (i) {
+          print(i);
+          if (i == 0) {
+            Navigator.pushNamed(context, '/');
+          } else {
+            Navigator.pushNamed(context, '/settings');
+          }
+        },
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
