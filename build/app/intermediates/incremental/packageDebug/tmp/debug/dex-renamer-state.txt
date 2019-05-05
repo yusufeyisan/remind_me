@@ -1,0 +1,4 @@
+#Sun May 05 22:26:41 EET 2019
+base.0=C\:\\Users\\yusuf\\Dev\\Flutter\\remind_me\\build\\app\\intermediates\\transforms\\dexMerger\\debug\\0
+path.0=classes.dex
+renamed.0=classes.dex
