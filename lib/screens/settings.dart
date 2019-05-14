@@ -86,57 +86,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 ))));
   }
 
-// returns start and end date of notify
-  Container buildNotifyTimeSetting() {
-    return Container(
-        decoration: BoxDecoration(
-            border: new Border.all(color: Colors.grey[400]),
-            borderRadius: new BorderRadius.all(Radius.circular(5))),
-        padding: EdgeInsets.all(15),
-        margin: EdgeInsets.only(top: 15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("Start Time"),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  child: getDropdownItems(hours, StartDateHour),
-                ),
-                Container(
-                  width: 100,
-                  child: getDropdownItems(minutes, StartDateMinute),
-                ),
-              ],
-            ),
-            Divider(),
-            Text("End Time"),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  child: getDropdownItems(hours, EndDateHour),
-                ),
-                Container(
-                  width: 100,
-                  child: getDropdownItems(minutes, EndDateMinute),
-                ),
-              ],
-            ),
-          ],
-        ));
-  }
-
 // returns a "Enabled" labels and swich buttom
   Container buildGeneralSetting() {
     return Container(
@@ -168,6 +117,87 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
     );
+  }
+
+// returns start and end date of notify
+  Container buildNotifyTimeSetting() {
+    return Container(
+        decoration: BoxDecoration(
+            border: new Border.all(color: Colors.grey[400]),
+            borderRadius: new BorderRadius.all(Radius.circular(5))),
+        padding: EdgeInsets.all(15),
+        margin: EdgeInsets.only(top: 15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("Start Time"),
+            Divider(),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 100,
+                  child: Text("Hour"),
+                ),
+                Container(
+                  width: 100,
+                  child: Text("Minute"),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 100,
+                  child: getDropdownItems(hours, StartDateHour),
+                ),
+                Container(
+                  width: 100,
+                  child: getDropdownItems(minutes, StartDateMinute),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text("End Time"),
+            Divider(),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 100,
+                  child: Text("Hour"),
+                ),
+                Container(
+                  width: 100,
+                  child: Text("Minute"),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 100,
+                  child: getDropdownItems(hours, EndDateHour),
+                ),
+                Container(
+                  width: 100,
+                  child: getDropdownItems(minutes, EndDateMinute),
+                ),
+              ],
+            ),
+          ],
+        ));
   }
 
 // returns dropdowns of hour andminutes
