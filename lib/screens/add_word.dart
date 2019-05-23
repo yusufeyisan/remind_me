@@ -35,6 +35,8 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // reference to our single class that manages the database
+  final dbHelper = DatabaseHelper.instance;
 
   static final validCharacters = RegExp(r'^[a-zA-Z0-9ğüşöçİĞÜŞÖÇ]+$');
   String _word = "";
@@ -65,7 +67,7 @@ class _RegisterFormState extends State<RegisterForm> {
     if (form.validate()) {
       setState(() {
         form.save();
-        saveWord();
+        _insertWord();
       });
     }
   }
@@ -176,28 +178,19 @@ class _RegisterFormState extends State<RegisterForm> {
     return true;
   }
 
-  void saveWord() async {
-    var W = Word(
-      this._word,
-      this._first,
-      this._second,
-      this._third,
-      this._synonyms,
-      this._active,
-      this._priority,
-    );
-
-    var db = DatabaseHelper();
-    await db.saveWord(W);
+  void _insertWord() async {
+    // row to insert
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnWord: this._word,
+      DatabaseHelper.columnFirst: this._first,
+      DatabaseHelper.columnSecond: this._second,
+      DatabaseHelper.columnThird: this._third,
+      DatabaseHelper.columnSynonyms: this._synonyms,
+      DatabaseHelper.columnActive: this._active,
+      DatabaseHelper.columnPriority: this._priority
+    };
+    final id = await dbHelper.insert(row);
     _formKey.currentState.reset();
-  }
-
-  void _showSnackBar(String text) {
-    var a = _AddWordPageState();
-    var scfKey = a.ScaffoldKey;
-
-    scfKey.currentState.showSnackBar(SnackBar(
-      content: Text("$text added successfully"),
-    ));
+    print('inserted row id: $id');
   }
 }
