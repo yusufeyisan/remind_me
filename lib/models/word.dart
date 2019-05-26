@@ -32,6 +32,7 @@ class Word {
   }
 
   // get model fields
+  int get id => _id;
   String get word => _word;
   String get first => _first;
   String get second => _second;
