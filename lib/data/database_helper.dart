@@ -90,7 +90,7 @@ class DatabaseHelper {
     int id = row[columnId];
     print(id);
     print(row);
-    id = 1;
+    
     return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
   }
 
