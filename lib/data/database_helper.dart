@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:path/path.dart';
+import 'package:remind_me/models/word.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
-
 
 class DatabaseHelper {
   static final _databaseName = "RemindMeDB.db";
@@ -85,12 +85,24 @@ class DatabaseHelper {
 
   // We are assuming here that the id column in the map is set. The other
   // column values will be used to update the row.
-  Future<int> update(Map<String, dynamic> row) async {
+  Future<int> update(Word w) async {
+      // row to update
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnId: w.id,
+      DatabaseHelper.columnWord: w.word,
+      DatabaseHelper.columnFirst: w.first,
+      DatabaseHelper.columnSecond: w.second,
+      DatabaseHelper.columnThird: w.third,
+      DatabaseHelper.columnSynonyms: w.synonyms,
+      DatabaseHelper.columnActive: w.active,
+      DatabaseHelper.columnPriority: w.priority
+    };
+
     Database db = await instance.database;
     int id = row[columnId];
     print(id);
     print(row);
-    
+
     return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
   }
 
