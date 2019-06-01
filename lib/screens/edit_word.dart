@@ -4,19 +4,27 @@ import '../data/database_helper.dart';
 import 'dart:async';
 
 class EditWordPage extends StatefulWidget {
-  final Word wordObject;
-
+  // final Word wordObject;
+  final int id;
   // In the constructor, require a Todo
-  EditWordPage({Key key, @required this.wordObject}) : super(key: key);
+  EditWordPage({Key key, @required this.id}) : super(key: key);
 
   @override
-  _EditWordPageState createState() => _EditWordPageState(wordObject);
+  _EditWordPageState createState() => _EditWordPageState(id);
 }
 
 class _EditWordPageState extends State<EditWordPage> {
-  final wordObject;
-  _EditWordPageState(this.wordObject);
+  final id;
+  _EditWordPageState(this.id);
   //_EditWordPageState(this.WordObject)
+  final dbHelper = DatabaseHelper.instance;
+  @override
+  void initState() {
+    // TODO: implement initState
+    // TODO: db den id ile veri çek
+    super.initState();
+
+  }
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
@@ -44,8 +52,20 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  final Word wordObject;
+  Word wordObject;
   _RegisterFormState(this.wordObject);
+
+  @override
+  void initState() {
+    print("Edit - " + wordObject.id.toString() + " - " + wordObject.word);
+    // TODO: implement initState
+    super.initState();
+    _word = wordObject.word;
+    _first = wordObject.first;
+    _second = wordObject.second;
+    _third = wordObject.third;
+    _synonyms = wordObject.synonyms;
+  }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // reference to our single class that manages the database
@@ -60,31 +80,6 @@ class _RegisterFormState extends State<RegisterForm> {
   bool _active = true;
   int _priority = 0;
 
-  updateFields({w: "", f: "", s: "", t: "", sy: ""}) {
-    setState(() {
-      _word = w;
-      _first = f;
-      _second = s;
-      _third = t;
-      _synonyms = sy;
-    });
-  }
-
-  resetFields() {
-    updateFields();
-    _formKey.currentState.reset();
-  }
-
-  void _submit() {
-    final form = _formKey.currentState;
-    if (form.validate()) {
-      setState(() {
-        form.save();
-        updateWord();
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -95,7 +90,7 @@ class _RegisterFormState extends State<RegisterForm> {
           TextFormField(
             onSaved: (val) => _word = val,
             decoration: InputDecoration(labelText: 'Word'),
-            initialValue: widget.wordObject.word,
+            initialValue: _word,
             validator: (String value) {
               if (value.trim().isEmpty) {
                 return 'Word is required';
@@ -111,7 +106,7 @@ class _RegisterFormState extends State<RegisterForm> {
           TextFormField(
               onSaved: (val) => _first = val,
               decoration: const InputDecoration(labelText: 'First Meaning'),
-              initialValue: widget.wordObject.first,
+              initialValue: _first,
               validator: (String value) {
                 if (value.trim().isEmpty) {
                   return 'First mean is required';
@@ -127,7 +122,7 @@ class _RegisterFormState extends State<RegisterForm> {
             decoration: const InputDecoration(
               labelText: 'Second Meaning',
             ),
-            initialValue: widget.wordObject.second,
+            initialValue: _second,
             validator: (String value) {
               if (value.trim().isNotEmpty &&
                   !validCharacters.hasMatch(value.trim())) {
@@ -143,7 +138,7 @@ class _RegisterFormState extends State<RegisterForm> {
             decoration: const InputDecoration(
               labelText: 'Third Meaning',
             ),
-            initialValue: widget.wordObject.third,
+            initialValue: _third,
             validator: (String value) {
               if (value.trim().isNotEmpty &&
                   !validCharacters.hasMatch(value.trim())) {
@@ -159,7 +154,7 @@ class _RegisterFormState extends State<RegisterForm> {
             decoration: const InputDecoration(
               labelText: 'Synonyms',
             ),
-            initialValue: widget.wordObject.synonyms,
+            initialValue: _synonyms,
             validator: (String value) {
               if (value.trim().isNotEmpty &&
                   !validCharacters.hasMatch(value.trim())) {
@@ -182,7 +177,12 @@ class _RegisterFormState extends State<RegisterForm> {
               const Spacer(),
               OutlineButton(
                 highlightedBorderColor: Colors.green,
-                onPressed: _submittable() ? _submit : null,
+                onPressed: _submittable()
+                    ? () async {
+                        Navigator.pop(context);
+                        _submit();
+                      }
+                    : null,
                 child: const Text('Save'),
               ),
             ],
@@ -192,24 +192,49 @@ class _RegisterFormState extends State<RegisterForm> {
     );
   }
 
+  updateFields({w: "", f: "", s: "", t: "", sy: ""}) {
+    setState(() {
+      _word = w;
+      _first = f;
+      _second = s;
+      _third = t;
+      _synonyms = sy;
+    });
+  }
+
+  resetFields() {
+    updateFields();
+    _formKey.currentState.reset();
+  }
+
+  void _submit() async {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      setState(() async {
+        form.save();
+        updateWord();
+      });
+    }
+  }
+
   bool _submittable() {
     return true;
   }
 
   void updateWord() async {
-    // row to insert
-    Map<String, dynamic> row = {
-      DatabaseHelper.columnId: this.wordObject.id,
-      DatabaseHelper.columnWord: this._word,
-      DatabaseHelper.columnFirst: this._first,
-      DatabaseHelper.columnSecond: this._second,
-      DatabaseHelper.columnThird: this._third,
-      DatabaseHelper.columnSynonyms: this._synonyms,
-      DatabaseHelper.columnActive: this._active,
-      DatabaseHelper.columnPriority: this._priority
-    };
-    final id = await dbHelper.update(row);
+    // row to update
+    wordObject.word = this._word;
+    wordObject.first = this._first;
+    wordObject.second = this._second;
+    wordObject.third = this._third;
+    wordObject.synonyms = this._synonyms;
+
+    final id = await dbHelper.update(wordObject);
+    setState(() {
+      Word w;
+      wordObject = w;
+    });
     _formKey.currentState.reset();
-    print('inserted row id: $id');
+    print('updated row id: $id');
   }
 }

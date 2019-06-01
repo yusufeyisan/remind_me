@@ -10,15 +10,23 @@ class WordListPage extends StatefulWidget {
   _WordListPageState createState() => _WordListPageState();
 }
 
+final TextStyle wordStyle = TextStyle(
+  color: Colors.blue,
+  fontSize: 18,
+);
+final TextStyle descriptionStyle = TextStyle(
+  fontSize: 15,
+  letterSpacing: 1,
+);
+final TextStyle synonymStyle = TextStyle(
+  fontSize: 15,
+  fontStyle: FontStyle.italic,
+  letterSpacing: 1,
+);
+
 class _WordListPageState extends State<WordListPage> {
   // reference to our single class that manages the database
   final dbHelper = DatabaseHelper.instance;
-
-  final TextStyle wordStyle = TextStyle(color: Colors.blue, fontSize: 18);
-  final TextStyle descriptionStyle = TextStyle(fontSize: 15, letterSpacing: 1);
-  final TextStyle synonymStyle =
-      TextStyle(fontSize: 15, fontStyle: FontStyle.italic, letterSpacing: 1);
-
   List<Word> items = [];
 
   @override
@@ -82,163 +90,169 @@ class _WordListPageState extends State<WordListPage> {
                         ],
                       ),
                     ),
-                    key: new Key(items[index].word),
+                    key: new Key(items[index].id.toString()),
                     dragStartBehavior: DragStartBehavior.down,
                     confirmDismiss: (direction) async {
-                      final bool res = await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Confirm"),
-                              content: direction.index == 2
-                                  ? Text(
-                                      "Are you sure you wish to delete this item?")
-                                  : Text(
-                                      "Are you sure you wish to edit this item?"),
-                              actions: <Widget>[
-                                RaisedButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(true),
-                                    child: direction.index == 2
-                                        ? Text("DELETE")
-                                        : Text("EDIT")),
-                                RaisedButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(false),
-                                    child: const Text("CANCEL"))
-                              ],
-                            );
-                          });
-                      return res;
+                      return await buildShowDialog(context, direction);
                     },
                     onDismissed: (direction) {
-                      if (direction.index == 2) {
-                        print("delete");
-                        delete(index);
-                        Scaffold.of(context).showSnackBar(new SnackBar(
-                          content: new Text("Word deleted successfully"),
-                        ));
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditWordPage(
-                                  wordObject: items[index],
-                                ),
-                          ),
-                        );
-                        print("length: " + items.length.toString());
-                        print("index: " + index.toString());
-                        print("name: " + items[index].word);
-                        setState(() {
-                          items.remove(items[index]);
-                        });
-                        query();
-                      }
+                      onDissmissed(direction, index, context);
                     },
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    "Word: ${items[index].word}",
-                                    style: wordStyle,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    "Means: ${items[index].first}\t-\t" +
-                                        "${items[index].second}\t-\t" +
-                                        "${items[index].third}",
-                                    style: descriptionStyle,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    "Synonym: ${items[index].synonyms}",
-                                    style: synonymStyle,
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Checkbox(
-                              value: items[index].active == 1 ? true : false,
-                              activeColor: Colors.green,
-                              onChanged: (b) {
-                                // update function takes index and value of active
-                                update(index, (b ? 1 : 0));
-                              },
-                            )
-                          ],
-                        )
-                      ],
-                    ));
+                    child: buildItemRow(index));
               })),
     );
+  }
+
+  Row buildWordRow(int index) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Word: ${items[index].word} $index ${items[index].id}",
+          style: wordStyle,
+        ),
+      ],
+    );
+  }
+
+  Row buildMeansRow(int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Text(
+          "Means: ${items[index].first}\t-\t" +
+              "${items[index].second}\t-\t" +
+              "${items[index].third}",
+          style: descriptionStyle,
+        ),
+      ],
+    );
+  }
+
+  Row buildSynonymRow(int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Text(
+          "Synonym: ${items[index].synonyms}",
+          style: synonymStyle,
+        ),
+      ],
+    );
+  }
+
+  Row buildItemRow(int index) {
+    return new Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              buildWordRow(index),
+              buildMeansRow(index),
+              buildSynonymRow(index)
+            ],
+          ),
+        ),
+        Column(
+          children: <Widget>[
+            Checkbox(
+              value: items[index].active == 1 ? true : false,
+              activeColor: Colors.green,
+              onChanged: (b) {
+                // update function takes index and value of active
+                update(index, (b ? 1 : 0));
+              },
+            )
+          ],
+        )
+      ],
+    );
+  }
+
+  void onDissmissed(
+      DismissDirection direction, int index, BuildContext context) {
+    if (direction.index == 2) {
+      delete(items[index].id);
+      Scaffold.of(context).showSnackBar(new SnackBar(
+        content: new Text("Word deleted successfully"),
+      ));
+    } else {
+      var id = items[index];
+      print("items Length: " + items.length.toString());
+      print("index :" + index.toString());
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditWordPage(
+                id:id ,
+              ),
+        ),
+      );
+      setState(() {
+        items.remove(items[index]);
+      });
+      refreshData();
+    }
+  }
+
+  Future<bool> buildShowDialog(
+      BuildContext context, DismissDirection direction) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Confirm"),
+            content: direction.index == 2
+                ? Text("Are you sure you wish to delete this item?")
+                : Text("Are you sure you wish to edit this item?"),
+            actions: <Widget>[
+              RaisedButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: direction.index == 2 ? Text("DELETE") : Text("EDIT")),
+              RaisedButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text("CANCEL"))
+            ],
+          );
+        });
   }
 
   @override
   void initState() {
     super.initState();
-    query();
+    refreshData();
   }
 
-  void query() async {
+  void refreshData() async {
     final allRows = await dbHelper.queryAllRows();
     setState(() {
+      items = [];
       items = allRows.map((word) => Word.fromJson(word)).toList();
     });
   }
 
-  void update(int id, int active) async {
-    var word = items[id];
+  void update(int id, active) async {
+    Word word = items[id];
+    word.active = active;
 
-    // row to update
-    Map<String, dynamic> row = {
-      DatabaseHelper.columnId: word.id,
-      DatabaseHelper.columnWord: word.word,
-      DatabaseHelper.columnFirst: word.first,
-      DatabaseHelper.columnSecond: word.second,
-      DatabaseHelper.columnThird: word.third,
-      DatabaseHelper.columnSynonyms: word.synonyms,
-      DatabaseHelper.columnActive: active,
-      DatabaseHelper.columnPriority: word.priority
-    };
-    final rowsAffected = await dbHelper.update(row);
-    print('updated $rowsAffected row(s)');
-    query();
+    // Update row
+    await dbHelper.update(word);
+    refreshData();
   }
 
   void delete(int id) async {
     // Assuming that the number of rows is the id for the last row.
-    final rowsDeleted = await dbHelper.delete(id);
-    print('deleted $rowsDeleted row(s): row $id');
-    query();
+    await dbHelper.delete(id);
+    refreshData();
   }
 
   // return length of items array
