@@ -41,6 +41,17 @@ class Word {
   int get active => _active;
   int get priority => _priority;
 
+  // get model fields
+
+  set id(int value) => _id = value;
+  set word(String value) => _word = value;
+  set first(String value) => _first = value;
+  set second(String value) => _second = value;
+  set third(String value) => _third = value;
+  set synonyms(String value) => _synonyms = value;
+  set active(int value) => _active = value;
+  set priority(int value) => _priority = value;
+
   // model to map
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
