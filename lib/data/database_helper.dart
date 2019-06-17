@@ -86,7 +86,7 @@ class DatabaseHelper {
   // We are assuming here that the id column in the map is set. The other
   // column values will be used to update the row.
   Future<int> update(Word w) async {
-      // row to update
+    // row to update
     Map<String, dynamic> row = {
       DatabaseHelper.columnId: w.id,
       DatabaseHelper.columnWord: w.word,
@@ -100,11 +100,20 @@ class DatabaseHelper {
 
     Database db = await instance.database;
     int id = row[columnId];
-    print(id);
-    print(row);
-
     return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
   }
+
+
+Future<Word> getWord(int id) async {
+  Database db = await instance.database;
+  var result = await db.rawQuery('SELECT * FROM $table WHERE $columnId = $id');
+ 
+  if (result.length > 0) {
+    return new Word.fromMap(result.first);
+  }
+ 
+  return null;
+}
 
   // Deletes the row specified by the id. The number of affected rows is
   // returned. This should be 1 as long as the row exists.
