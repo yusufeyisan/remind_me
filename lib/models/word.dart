@@ -66,6 +66,17 @@ class Word {
     return map;
   }
 
+  Word.fromMap(Map<String, dynamic> map) {
+    this._id = map['_id'];
+    this._word = map['word'];
+    this._first = map['first'];
+    this._second = map['second'];
+    this._third = map['third'];
+    this._synonyms = map['synonyms'];
+    this._priority = map['priority'];
+    this._active = map['active'];
+  }
+
   Word.fromJson(Map json)
       : _id = json['_id'],
         _word = json['word'],
