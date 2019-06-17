@@ -20,10 +20,7 @@ class _EditWordPageState extends State<EditWordPage> {
   final dbHelper = DatabaseHelper.instance;
   @override
   void initState() {
-    // TODO: implement initState
-    // TODO: db den id ile veri çek
     super.initState();
-
   }
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -37,34 +34,39 @@ class _EditWordPageState extends State<EditWordPage> {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-            child: RegisterForm(wordObject: this.wordObject),
+            child: RegisterForm(
+              id: this.id,
+            ),
           ),
         ));
   }
 }
 
 class RegisterForm extends StatefulWidget {
-  final Word wordObject;
-  const RegisterForm({Key key, @required this.wordObject}) : super(key: key);
+  final int id;
+  const RegisterForm({Key key, @required this.id}) : super(key: key);
 
   @override
-  _RegisterFormState createState() => _RegisterFormState(wordObject);
+  _RegisterFormState createState() => _RegisterFormState(id);
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  Word wordObject;
-  _RegisterFormState(this.wordObject);
+  int id;
+  _RegisterFormState(this.id);
+  Word editWord;
+  String _word;
+  String _first;
+  String _second;
+  String _third;
+  String _synonyms;
+  bool _active;
+  int _priority;
 
   @override
   void initState() {
-    print("Edit - " + wordObject.id.toString() + " - " + wordObject.word);
     // TODO: implement initState
     super.initState();
-    _word = wordObject.word;
-    _first = wordObject.first;
-    _second = wordObject.second;
-    _third = wordObject.third;
-    _synonyms = wordObject.synonyms;
+    getWord(id);
   }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -72,13 +74,6 @@ class _RegisterFormState extends State<RegisterForm> {
   final dbHelper = DatabaseHelper.instance;
 
   static final validCharacters = RegExp(r'^[a-zA-Z0-9ğüşöçİĞÜŞÖÇ]+$');
-  String _word = "";
-  String _first = "";
-  String _second = "";
-  String _third = "";
-  String _synonyms = "";
-  bool _active = true;
-  int _priority = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -221,18 +216,46 @@ class _RegisterFormState extends State<RegisterForm> {
     return true;
   }
 
+  void getWord(int id) async {
+    final w = await dbHelper.getWord(id);
+    setState(() {
+      this.editWord = new Word(
+        w.word,
+        w.first,
+        w.second,
+        w.third,
+        w.synonyms,
+        w.active,
+        w.priority,
+      );
+      editWord.id = w.id;
+      updateFields();
+    });
+    print(this._word);
+    _formKey.currentState.setState(() {
+      this._word = w.word;
+      this._first = w.first;
+      this._second = w.second;
+      this._third = w.third;
+      this._synonyms = w.second;
+      this._priority = w.priority;
+      this._active = w.active == 1 ? true : false;
+    });
+  }
+
   void updateWord() async {
     // row to update
-    wordObject.word = this._word;
-    wordObject.first = this._first;
-    wordObject.second = this._second;
-    wordObject.third = this._third;
-    wordObject.synonyms = this._synonyms;
 
-    final id = await dbHelper.update(wordObject);
+    editWord.word = this._word;
+    editWord.first = this._first;
+    editWord.second = this._second;
+    editWord.third = this._third;
+    editWord.synonyms = this._synonyms;
+
+    final id = await dbHelper.update(editWord);
     setState(() {
       Word w;
-      wordObject = w;
+      editWord = w;
     });
     _formKey.currentState.reset();
     print('updated row id: $id');
