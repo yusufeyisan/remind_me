@@ -186,15 +186,11 @@ class _WordListPageState extends State<WordListPage> {
         content: new Text("Word deleted successfully"),
       ));
     } else {
-      var id = items[index];
-      print("items Length: " + items.length.toString());
-      print("index :" + index.toString());
+      int id = items[index].id;
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EditWordPage(
-                id:id ,
-              ),
+          builder: (context) => EditWordPage(id: id),
         ),
       );
       setState(() {
