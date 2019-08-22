@@ -43,7 +43,7 @@ class _WordListPageState extends State<WordListPage> {
                   title: Text(
                     "Word List",
                     style: TextStyle(
-                      letterSpacing: 1.2,
+                        letterSpacing: 1.2,
                         color: Colors.black87,
                         fontSize: 24.0,
                         fontWeight: FontWeight.w600),
@@ -209,13 +209,14 @@ class _WordListPageState extends State<WordListPage> {
         content: new Text("Word deleted successfully."),
       ));
     } else {
-        print("send edit word index:$index\n");
+      print("send edit word index:$index\n");
       int id = items[index].id;
-        print("send edit word id:$id\n");
+      print("send edit word id:$id\n");
+      var data = items[index];
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EditWordPage(id: id),
+          builder: (context) => EditWordPage(word: data),
         ),
       );
       setState(() {
