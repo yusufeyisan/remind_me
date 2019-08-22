@@ -184,10 +184,12 @@ class _WordListPageState extends State<WordListPage> {
     if (direction.index == 2) {
       delete(items[index].id);
       Scaffold.of(context).showSnackBar(new SnackBar(
-        content: new Text("Word deleted successfully"),
+        content: new Text("Word deleted successfully."),
       ));
     } else {
+        print("send edit word index:$index\n");
       int id = items[index].id;
+        print("send edit word id:$id\n");
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -209,8 +211,8 @@ class _WordListPageState extends State<WordListPage> {
           return AlertDialog(
             title: const Text("Confirm"),
             content: direction.index == 2
-                ? Text("Are you sure you wish to delete this item?")
-                : Text("Are you sure you wish to edit this item?"),
+                ? Text("Do you want to delete this item?")
+                : Text("Do you want to edit this item?"),
             actions: <Widget>[
               RaisedButton(
                   onPressed: () => Navigator.of(context).pop(true),
