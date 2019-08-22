@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
             ),
             new RaisedMenuButton(
                 buttonIcon: Icon(Icons.menu),
-                buttonName: "Show Word List",
+                buttonName: "Show Words",
                 pressButton: () {
                   print("show word list");
                   Navigator.pushNamed(context, '/word_list');
