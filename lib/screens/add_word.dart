@@ -9,11 +9,11 @@ class AddWordPage extends StatefulWidget {
 }
 
 class _AddWordPageState extends State<AddWordPage> {
-  final ScaffoldKey = GlobalKey<ScaffoldState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: ScaffoldKey,
+        key: scaffoldKey,
         appBar: AppBar(
           title: Text("Add New Word"),
         ),
@@ -38,14 +38,16 @@ class _RegisterFormState extends State<RegisterForm> {
   // reference to our single class that manages the database
   final dbHelper = DatabaseHelper.instance;
 
-  static final validCharacters = RegExp(r'^[a-zA-Z0-9ğüşöçİĞÜŞÖÇ]+$');
+  static final validCharacters = RegExp(r'^[a-zA-Z0-9 ğüşöçıİĞÜŞÖÇ]*$');
+
+  int _priority = 0;
+  bool _active = true;
+
   String _word = "";
   String _first = "";
-  String _second = "";
   String _third = "";
+  String _second = "";
   String _synonyms = "";
-  bool _active = true;
-  int _priority = 0;
 
   updateFields({w: "", f: "", s: "", t: "", sy: ""}) {
     setState(() {
