@@ -20,7 +20,6 @@ final TextStyle descriptionStyle = TextStyle(
 );
 final TextStyle synonymStyle = TextStyle(
   fontSize: 15,
-  fontStyle: FontStyle.italic,
   letterSpacing: 1,
 );
 
@@ -68,7 +67,7 @@ class _WordListPageState extends State<WordListPage> {
                         children: <Widget>[
                           Icon(Icons.edit, color: Colors.white),
                           SizedBox(width: 10),
-                          Text("Do you want to edit it?",
+                          Text("Edit",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500))
@@ -82,7 +81,7 @@ class _WordListPageState extends State<WordListPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          Text("Do you want to delete it?",
+                          Text("Delete",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500)),
@@ -105,27 +104,45 @@ class _WordListPageState extends State<WordListPage> {
   }
 
   Row buildWordRow(int index) {
+    var word = items[index].word.toLowerCase();
+    word = word[0].toUpperCase() + word.substring(1);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "Word: ${items[index].word} $index ${items[index].id}",
+          "Word: $word index:$index id:${items[index].id}",
           style: wordStyle,
         ),
       ],
     );
   }
 
+  String toUpperFirstChar(String value) {
+    if (value.length == 0) {
+      return value;
+    }
+    value = value[0].toUpperCase() + value.substring(1);
+    return value;
+  }
+
   Row buildMeansRow(int index) {
+    var means = "";
+    if (items[index].first.length > 0) {
+      means = toUpperFirstChar(items[index].first) + "\t";
+    }
+    if (items[index].second.length > 0) {
+      means += "-\t" + toUpperFirstChar(items[index].second) + "\t";
+    }
+    if (items[index].third.length > 0) {
+      means += "-\t" + toUpperFirstChar(items[index].third) + "\t";
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Text(
-          "Means: ${items[index].first}\t-\t" +
-              "${items[index].second}\t-\t" +
-              "${items[index].third}",
+          "Means: $means",
           style: descriptionStyle,
         ),
       ],
@@ -133,13 +150,18 @@ class _WordListPageState extends State<WordListPage> {
   }
 
   Row buildSynonymRow(int index) {
+    var synonym = items[index].synonyms;
+    if (synonym.length == 0) {
+      return Row();
+    }
+    synonym = toUpperFirstChar(synonym);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Text(
-          "Synonym: ${items[index].synonyms}",
+          "Synonym: $synonym",
           style: synonymStyle,
         ),
       ],
@@ -240,6 +262,7 @@ class _WordListPageState extends State<WordListPage> {
   }
 
   void update(int id, active) async {
+    print("object");
     Word word = items[id];
     word.active = active;
 
