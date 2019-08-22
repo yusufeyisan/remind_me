@@ -20,6 +20,7 @@ class _EditWordPageState extends State<EditWordPage> {
   final dbHelper = DatabaseHelper.instance;
   @override
   void initState() {
+    print("start update id: $id");
     super.initState();
   }
 
@@ -61,15 +62,18 @@ class _RegisterFormState extends State<RegisterForm> {
   String _synonyms;
   bool _active;
   int _priority;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     // TODO: implement initState
+    print("register form id: $id");
+    setState(() {
+      getWord(id);
+    });
     super.initState();
-    getWord(id);
   }
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // reference to our single class that manages the database
   final dbHelper = DatabaseHelper.instance;
 
@@ -188,6 +192,7 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   updateFields({w: "", f: "", s: "", t: "", sy: ""}) {
+    print("Sıra: 4");
     setState(() {
       _word = w;
       _first = f;
@@ -217,9 +222,12 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   void getWord(int id) async {
+    print("Sıra: 1");
     final w = await dbHelper.getWord(id);
+    print("Sıra: 2");
     setState(() {
-      this.editWord = new Word(
+      print("Sıra: 3");
+      editWord = new Word(
         w.word,
         w.first,
         w.second,
@@ -229,17 +237,25 @@ class _RegisterFormState extends State<RegisterForm> {
         w.priority,
       );
       editWord.id = w.id;
-      updateFields();
     });
-    print(this._word);
+
+    print("Sıra: 5");
     _formKey.currentState.setState(() {
-      this._word = w.word;
-      this._first = w.first;
-      this._second = w.second;
-      this._third = w.third;
-      this._synonyms = w.second;
-      this._priority = w.priority;
-      this._active = w.active == 1 ? true : false;
+      _word = w.word;
+      _first = w.first;
+      _second = w.second;
+      _third = w.third;
+      _synonyms = w.second;
+      _priority = w.priority;
+      _active = w.active == 1 ? true : false;
+    });
+    print("********");
+    print(_word);
+    print(_first);
+    print(_second);
+    print(_third);
+    setState(() {
+      _formKey;
     });
   }
 
