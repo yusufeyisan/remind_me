@@ -44,9 +44,10 @@ class _WordListPageState extends State<WordListPage> {
                   title: Text(
                     "Word List",
                     style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 16.0,
-                    ),
+                      letterSpacing: 1.2,
+                        color: Colors.black87,
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
