@@ -1,76 +1,37 @@
+import 'dart:io';
+
+import '../data/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:remind_me/models/word.dart';
-import '../data/database_helper.dart';
-import 'dart:async';
 
 class EditWordPage extends StatefulWidget {
   // final Word wordObject;
-  final int id;
+  final Word word;
   // In the constructor, require a Todo
-  EditWordPage({Key key, @required this.id}) : super(key: key);
+  EditWordPage({Key key, @required this.word}) : super(key: key);
 
   @override
-  _EditWordPageState createState() => _EditWordPageState(id);
+  _EditWordPageState createState() => _EditWordPageState(word);
 }
 
 class _EditWordPageState extends State<EditWordPage> {
-  final id;
-  _EditWordPageState(this.id);
-  //_EditWordPageState(this.WordObject)
-  final dbHelper = DatabaseHelper.instance;
-  @override
-  void initState() {
-    print("start update id: $id");
-    super.initState();
-  }
+  Word word;
+  _EditWordPageState(this.word);
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        key: scaffoldKey,
-        appBar: AppBar(
-          title: Text("Edit New Word "),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-            child: RegisterForm(
-              id: this.id,
-            ),
-          ),
-        ));
-  }
-}
-
-class RegisterForm extends StatefulWidget {
-  final int id;
-  const RegisterForm({Key key, @required this.id}) : super(key: key);
-
-  @override
-  _RegisterFormState createState() => _RegisterFormState(id);
-}
-
-class _RegisterFormState extends State<RegisterForm> {
-  int id;
-  _RegisterFormState(this.id);
-  Word editWord;
-  String _word;
-  String _first;
-  String _second;
-  String _third;
-  String _synonyms;
-  bool _active;
-  int _priority;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController wordController = TextEditingController();
+  TextEditingController firstController = TextEditingController();
+  TextEditingController secondController = TextEditingController();
+  TextEditingController thirdController = TextEditingController();
+  TextEditingController synonymController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
-    print("register form id: $id");
-    setState(() {
-      getWord(id);
-    });
+    wordController.text = word.word;
+    firstController.text = word.first;
+    secondController.text = word.second;
+    thirdController.text = word.third;
+    synonymController.text = word.synonyms;
     super.initState();
   }
 
@@ -78,142 +39,181 @@ class _RegisterFormState extends State<RegisterForm> {
   final dbHelper = DatabaseHelper.instance;
 
   static final validCharacters = RegExp(r'^[a-zA-Z0-9ğüşöçİĞÜŞÖÇ]+$');
-
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            onSaved: (val) => _word = val,
-            decoration: InputDecoration(labelText: 'Word'),
-            initialValue: _word,
-            validator: (String value) {
-              if (value.trim().isEmpty) {
-                return 'Word is required';
-              } else if (!validCharacters.hasMatch(value.trim())) {
-                return "Invalid characters";
-              }
-              updateFields(w: value, f: _first, s: _second, t: _third);
-            },
-          ),
-          const SizedBox(height: 10.0),
-          Divider(),
-          const SizedBox(height: 10.0),
-          TextFormField(
-              onSaved: (val) => _first = val,
-              decoration: const InputDecoration(labelText: 'First Meaning'),
-              initialValue: _first,
-              validator: (String value) {
-                if (value.trim().isEmpty) {
-                  return 'First mean is required';
-                } else if (!validCharacters.hasMatch(value.trim())) {
-                  return "First mean is invalid";
-                }
-                updateFields(
-                    w: _word, f: value, s: _second, t: _third, sy: _synonyms);
-              }),
-          const SizedBox(height: 10.0),
-          TextFormField(
-            onSaved: (val) => _second = val,
-            decoration: const InputDecoration(
-              labelText: 'Second Meaning',
-            ),
-            initialValue: _second,
-            validator: (String value) {
-              if (value.trim().isNotEmpty &&
-                  !validCharacters.hasMatch(value.trim())) {
-                return 'Second means is invalid';
-              }
-              updateFields(
-                  w: _word, f: _first, s: value, t: _third, sy: _synonyms);
-            },
-          ),
-          const SizedBox(height: 10.0),
-          TextFormField(
-            onSaved: (val) => _third = val,
-            decoration: const InputDecoration(
-              labelText: 'Third Meaning',
-            ),
-            initialValue: _third,
-            validator: (String value) {
-              if (value.trim().isNotEmpty &&
-                  !validCharacters.hasMatch(value.trim())) {
-                return 'Third meaning is invalid';
-              }
-              updateFields(
-                  w: _word, f: _first, s: _second, t: value, sy: _synonyms);
-            },
-          ),
-          const SizedBox(height: 10.0),
-          TextFormField(
-            onSaved: (val) => _synonyms = val,
-            decoration: const InputDecoration(
-              labelText: 'Synonyms',
-            ),
-            initialValue: _synonyms,
-            validator: (String value) {
-              if (value.trim().isNotEmpty &&
-                  !validCharacters.hasMatch(value.trim())) {
-                return 'Synonym fied contains invalid characters';
-              }
-              updateFields(
-                  w: _word, f: _first, s: _second, t: _third, sy: value);
-            },
-          ),
-          const SizedBox(height: 10.0),
-          Row(
-            children: <Widget>[
-              OutlineButton(
-                highlightedBorderColor: Colors.red,
-                onPressed: () {
-                  resetFields();
-                },
-                child: const Text('Clean'),
-              ),
-              const Spacer(),
-              OutlineButton(
-                highlightedBorderColor: Colors.green,
-                onPressed: _submittable()
-                    ? () async {
-                        Navigator.pop(context);
-                        _submit();
-                      }
-                    : null,
-                child: const Text('Save'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+    return Scaffold(
+        key: scaffoldKey,
+        appBar: AppBar(
+          title: Text("Edit Word "),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+              padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    TextFormField(
+                      //    onSaved: (val) => _word = val,
+                      decoration: InputDecoration(
+                          labelText: 'Word',
+                          labelStyle: TextStyle(color: Colors.grey)),
+                      //   initialValue: _word,
+                      controller: wordController,
+                      validator: (String value) {
+                        print("66:" + value);
+                        if (value.trim().isEmpty) {
+                          return 'Word is required';
+                        } else if (!validCharacters.hasMatch(value.trim())) {
+                          return "Invalid characters";
+                        }
+                        var w = word;
+                        w.word = value;
+                        setState(() {
+                          word = w;
+                        });
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 10.0),
+                    Divider(),
+                    const SizedBox(height: 10.0),
+                    TextFormField(
+                        onSaved: (val) => word.first = val,
+                        decoration: const InputDecoration(
+                            labelText: 'First Meaning',
+                            labelStyle: TextStyle(color: Colors.grey)),
+                        // initialValue: _first,
+                        controller: firstController,
+                        validator: (String value) {
+                          if (value.trim().isEmpty) {
+                            return 'First mean is required';
+                          } else if (!validCharacters.hasMatch(value.trim())) {
+                            return "First mean is invalid";
+                          }
+                          var w = word;
+                          w.first = value;
+                          setState(() {
+                            word = w;
+                          });
 
-  updateFields({w: "", f: "", s: "", t: "", sy: ""}) {
-    print("Sıra: 4");
-    setState(() {
-      _word = w;
-      _first = f;
-      _second = s;
-      _third = t;
-      _synonyms = sy;
-    });
+                          return null;
+                        }),
+                    const SizedBox(height: 10.0),
+                    TextFormField(
+                      onSaved: (val) => word.second = val,
+                      decoration: const InputDecoration(
+                          labelText: 'Second Meaning',
+                          labelStyle: TextStyle(color: Colors.grey)),
+                      //  initialValue: _second,
+                      controller: secondController,
+                      validator: (String value) {
+                        if (value.trim().isNotEmpty &&
+                            !validCharacters.hasMatch(value.trim())) {
+                          return 'Second means is invalid';
+                        }
+                        var w = word;
+                        w.second = value;
+                        setState(() {
+                          word = w;
+                        });
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 10.0),
+                    TextFormField(
+                      onSaved: (val) => word.third = val,
+                      decoration: const InputDecoration(
+                          labelText: 'Third Meaning',
+                          labelStyle: TextStyle(color: Colors.grey)),
+                      // initialValue: _third,
+                      controller: thirdController,
+                      validator: (String value) {
+                        if (value.trim().isNotEmpty &&
+                            !validCharacters.hasMatch(value.trim())) {
+                          return 'Third meaning is invalid';
+                        }
+                        var w = word;
+                        w.third = value;
+                        setState(() {
+                          word = w;
+                        });
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 10.0),
+                    TextFormField(
+                      onSaved: (val) => word.synonyms = val,
+                      decoration: const InputDecoration(
+                          labelText: 'Synonyms',
+                          labelStyle: TextStyle(color: Colors.grey)),
+                      //   initialValue: _synonyms,
+                      controller: synonymController,
+                      validator: (String value) {
+                        if (value.trim().isNotEmpty &&
+                            !validCharacters.hasMatch(value.trim())) {
+                          return 'Synonym fied contains invalid characters';
+                        }
+                        var w = word;
+                        w.synonyms = value;
+                        setState(() {
+                          word = w;
+                        });
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 10.0),
+                    Row(
+                      children: <Widget>[
+                        OutlineButton(
+                          highlightedBorderColor: Colors.red,
+                          onPressed: () {
+                            resetFields();
+                          },
+                          child: const Text('Clean'),
+                        ),
+                        const Spacer(),
+                        OutlineButton(
+                          highlightedBorderColor: Colors.green,
+                          onPressed: _submittable()
+                              ? () async {
+                                  var result = await _submit();
+                                  if (result) {
+                                    Navigator.pop(context);
+                                  }
+                                }
+                              : null,
+                          child: const Text('Save'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )),
+        ));
   }
 
   resetFields() {
-    updateFields();
-    _formKey.currentState.reset();
+    setState(() {
+      wordController.text = "";
+      firstController.text = "";
+      secondController.text = "";
+      thirdController.text = "";
+      synonymController.text = "";
+    });
   }
 
-  void _submit() async {
+  Future<bool> _submit() async {
     final form = _formKey.currentState;
     if (form.validate()) {
-      setState(() async {
-        form.save();
-        updateWord();
-      });
+      print('Form is valid');
+      await updateWord();
+      return true;
+    } else {
+      print("object yusuf");
+      return false;
     }
   }
 
@@ -221,59 +221,8 @@ class _RegisterFormState extends State<RegisterForm> {
     return true;
   }
 
-  void getWord(int id) async {
-    print("Sıra: 1");
-    final w = await dbHelper.getWord(id);
-    print("Sıra: 2");
-    setState(() {
-      print("Sıra: 3");
-      editWord = new Word(
-        w.word,
-        w.first,
-        w.second,
-        w.third,
-        w.synonyms,
-        w.active,
-        w.priority,
-      );
-      editWord.id = w.id;
-    });
-
-    print("Sıra: 5");
-    _formKey.currentState.setState(() {
-      _word = w.word;
-      _first = w.first;
-      _second = w.second;
-      _third = w.third;
-      _synonyms = w.second;
-      _priority = w.priority;
-      _active = w.active == 1 ? true : false;
-    });
-    print("********");
-    print(_word);
-    print(_first);
-    print(_second);
-    print(_third);
-    setState(() {
-      _formKey;
-    });
-  }
-
   void updateWord() async {
-    // row to update
-
-    editWord.word = this._word;
-    editWord.first = this._first;
-    editWord.second = this._second;
-    editWord.third = this._third;
-    editWord.synonyms = this._synonyms;
-
-    final id = await dbHelper.update(editWord);
-    setState(() {
-      Word w;
-      editWord = w;
-    });
-    _formKey.currentState.reset();
+    final id = await dbHelper.update(word);
     print('updated row id: $id');
   }
 }
