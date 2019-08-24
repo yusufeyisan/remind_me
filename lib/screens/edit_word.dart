@@ -38,7 +38,7 @@ class _EditWordPageState extends State<EditWordPage> {
   // reference to our single class that manages the database
   final dbHelper = DatabaseHelper.instance;
 
-  static final validCharacters = RegExp(r'^[a-zA-Z0-9ğüşöçİĞÜŞÖÇ]+$');
+  static final validCharacters = RegExp(r'^[a-zA-Z0-9 ğüşöçıİĞÜŞÖÇ]*$');
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
