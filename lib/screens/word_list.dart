@@ -11,13 +11,11 @@ class WordListPage extends StatefulWidget {
 }
 
 final TextStyle wordStyle = TextStyle(
-  color: Colors.blue,
+  color: Colors.black,
   fontSize: 18,
 );
-final TextStyle descriptionStyle = TextStyle(
-  fontSize: 15,
-  letterSpacing: 1,
-);
+final TextStyle meansStyle =
+    TextStyle(fontSize: 15, letterSpacing: 1, color: Colors.white);
 final TextStyle synonymStyle = TextStyle(
   fontSize: 15,
   letterSpacing: 1,
@@ -60,9 +58,15 @@ class _WordListPageState extends State<WordListPage> {
                         ? DismissDirection.horizontal
                         : DismissDirection.startToEnd),
                     background: Container(
+                      margin: EdgeInsets.all(6.0),
+                      decoration: new BoxDecoration(
+                        color: Colors.orangeAccent,
+                        shape: BoxShape.rectangle,
+                        borderRadius: new BorderRadius.circular(8.0),
+                      ),
                       alignment: Alignment.centerLeft,
                       padding: EdgeInsets.only(left: 20.0),
-                      color: Colors.orangeAccent,
+                      //  color: Colors.orangeAccent,
                       child: Row(
                         children: <Widget>[
                           Icon(Icons.edit, color: Colors.white),
@@ -75,9 +79,14 @@ class _WordListPageState extends State<WordListPage> {
                       ),
                     ),
                     secondaryBackground: Container(
+                      margin: EdgeInsets.all(6.0),
+                      decoration: new BoxDecoration(
+                        color: Colors.redAccent,
+                        shape: BoxShape.rectangle,
+                        borderRadius: new BorderRadius.circular(8.0),
+                      ),
                       alignment: Alignment.centerRight,
                       padding: EdgeInsets.only(right: 20.0),
-                      color: Colors.redAccent,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
@@ -98,7 +107,29 @@ class _WordListPageState extends State<WordListPage> {
                     onDismissed: (direction) {
                       onDissmissed(direction, index, context);
                     },
-                    child: buildItemRow(index));
+                    child: Container(
+                        height: 80.0,
+                        margin: new EdgeInsets.all(6.0),
+                        decoration: new BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: FractionalOffset.topCenter,
+                              end: FractionalOffset.bottomCenter,
+                              colors: <Color>[
+                                Color(0xFF38326D),
+                                Color(0xFF6158B9),
+                                Color(0xFF38326D),
+                              ],
+                            ),
+                            color: new Color(0xFF223366),
+                            shape: BoxShape.rectangle,
+                            borderRadius: new BorderRadius.circular(8.0),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.black38,
+                                  blurRadius: 10.0,
+                                  offset: Offset(0.0, 10.0)),
+                            ]),
+                        child: buildItemRow(index)));
               })),
     );
   }
@@ -143,7 +174,7 @@ class _WordListPageState extends State<WordListPage> {
       children: <Widget>[
         Text(
           "Means: $means",
-          style: descriptionStyle,
+          style: meansStyle,
         ),
       ],
     );
@@ -213,16 +244,17 @@ class _WordListPageState extends State<WordListPage> {
       int id = items[index].id;
       print("send edit word id:$id\n");
       var data = items[index];
+      setState(() {
+        items.remove(items[index]);
+      });
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => EditWordPage(word: data),
         ),
-      );
-      setState(() {
-        items.remove(items[index]);
+      ).then((cntx) {
+        refreshData();
       });
-      refreshData();
     }
   }
 
