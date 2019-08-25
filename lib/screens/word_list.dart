@@ -11,12 +11,18 @@ class WordListPage extends StatefulWidget {
 }
 
 final TextStyle wordStyle = TextStyle(
-  color: Colors.black,
   fontSize: 18,
+  letterSpacing: 1,
+  color: Colors.white,
 );
-final TextStyle meansStyle =
-    TextStyle(fontSize: 15, letterSpacing: 1, color: Colors.white);
+final TextStyle meansStyle = TextStyle(
+  fontSize: 15,
+  letterSpacing: 1,
+  color: Colors.white,
+);
+
 final TextStyle synonymStyle = TextStyle(
+  color: Colors.white70,
   fontSize: 15,
   letterSpacing: 1,
 );
@@ -141,7 +147,15 @@ class _WordListPageState extends State<WordListPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "Word: $word index:$index id:${items[index].id}",
+          "Word: ",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        Text(
+          "$word",
           style: wordStyle,
         ),
       ],
@@ -173,7 +187,15 @@ class _WordListPageState extends State<WordListPage> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Text(
-          "Means: $means",
+          "Means: ",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          "$means",
           style: meansStyle,
         ),
       ],
@@ -192,7 +214,15 @@ class _WordListPageState extends State<WordListPage> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Text(
-          "Synonym: $synonym",
+          "Synonym: ",
+          style: TextStyle(
+            color: Colors.white70,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+        ),
+        Text(
+          "$synonym",
           style: synonymStyle,
         ),
       ],
