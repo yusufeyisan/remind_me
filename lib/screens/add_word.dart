@@ -14,11 +14,28 @@ class _AddWordPageState extends State<AddWordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        appBar: AppBar(
-          title: Text("Add New Word"),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
+        body: NestedScrollView( 
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                expandedHeight: 200.0,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text(
+                    "Add Word",
+                    style: TextStyle(
+                        letterSpacing: 1.2,
+                        color: Colors.black87,
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+            ];
+          },
+          body: Padding(
             padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
             child: RegisterForm(),
           ),
