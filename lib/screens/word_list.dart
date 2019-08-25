@@ -114,28 +114,14 @@ class _WordListPageState extends State<WordListPage> {
                       onDissmissed(direction, index, context);
                     },
                     child: Container(
-                        height: 80.0,
-                        margin: new EdgeInsets.all(6.0),
-                        decoration: new BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: FractionalOffset.topCenter,
-                              end: FractionalOffset.bottomCenter,
-                              colors: <Color>[
-                                Color(0xFF38326D),
-                                Color(0xFF6158B9),
-                                Color(0xFF38326D),
-                              ],
-                            ),
-                            color: new Color(0xFF223366),
-                            shape: BoxShape.rectangle,
-                            borderRadius: new BorderRadius.circular(8.0),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.black38,
-                                  blurRadius: 10.0,
-                                  offset: Offset(0.0, 10.0)),
-                            ]),
-                        child: buildItemRow(index)));
+                      child: Card(
+                        child: Container(
+                            height: 80.0,
+                            color: Colors.teal[400],
+                            margin: new EdgeInsets.all(0.0),
+                            child: buildItemRow(index)),
+                      ),
+                    ));
               })),
     );
   }
@@ -247,15 +233,35 @@ class _WordListPageState extends State<WordListPage> {
           ),
         ),
         Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Checkbox(
-              value: items[index].active == 1 ? true : false,
-              activeColor: Colors.green,
-              onChanged: (b) {
-                // update function takes index and value of active
-                update(index, (b ? 1 : 0));
+            InkWell(
+              onTap: () {
+                setState(() {
+                  var s = items[index].active == 1 ? 0 : 1;
+                  update(index, s);
+                });
               },
-            )
+              child: Container(
+                margin: EdgeInsets.only(right: 10),
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                child: Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: items[index].active == 1
+                      ? Icon(
+                          Icons.check,
+                          size: 30.0,
+                          color: Colors.green,
+                        )
+                      : Icon(
+                          Icons.check_box_outline_blank,
+                          size: 30.0,
+                          color: Colors.white,
+                        ),
+                ),
+              ),
+            ),
           ],
         )
       ],
