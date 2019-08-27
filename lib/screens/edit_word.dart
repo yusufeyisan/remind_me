@@ -44,9 +44,27 @@ class _EditWordPageState extends State<EditWordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        appBar: AppBar(
-          title: Text("Edit Word "),
-        ),
+        body: NestedScrollView( 
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                expandedHeight: 200.0,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text(
+                    "Edit Word",
+                    style: TextStyle(
+                        letterSpacing: 1.2,
+                        color: Colors.black87,
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+            ];
+          },
         body: SingleChildScrollView(
           child: Padding(
               padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
@@ -98,7 +116,6 @@ class _EditWordPageState extends State<EditWordPage> {
                           setState(() {
                             word = w;
                           });
-
                           return null;
                         }),
                     const SizedBox(height: 10.0),
@@ -192,7 +209,8 @@ class _EditWordPageState extends State<EditWordPage> {
                   ],
                 ),
               )),
-        ));
+        ))
+    );
   }
 
   resetFields() {
@@ -222,7 +240,7 @@ class _EditWordPageState extends State<EditWordPage> {
   }
 
   void updateWord() async {
-    final id = await dbHelper.update(word);
+    final id = await dbHelper.updateWord(word);
     print('updated row id: $id');
   }
 }
