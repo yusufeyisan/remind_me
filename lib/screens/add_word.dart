@@ -14,7 +14,7 @@ class _AddWordPageState extends State<AddWordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        body: NestedScrollView( 
+        body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
@@ -108,6 +108,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 return "Invalid characters";
               }
               updateFields(w: value, f: _first, s: _second, t: _third);
+              return null;
             },
           ),
           const SizedBox(height: 10.0),
@@ -124,6 +125,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 }
                 updateFields(
                     w: _word, f: value, s: _second, t: _third, sy: _synonyms);
+                return null;
               }),
           const SizedBox(height: 10.0),
           TextFormField(
@@ -138,6 +140,7 @@ class _RegisterFormState extends State<RegisterForm> {
               }
               updateFields(
                   w: _word, f: _first, s: value, t: _third, sy: _synonyms);
+              return null;
             },
           ),
           const SizedBox(height: 10.0),
@@ -153,6 +156,7 @@ class _RegisterFormState extends State<RegisterForm> {
               }
               updateFields(
                   w: _word, f: _first, s: _second, t: value, sy: _synonyms);
+              return null;
             },
           ),
           const SizedBox(height: 10.0),
@@ -168,6 +172,7 @@ class _RegisterFormState extends State<RegisterForm> {
               }
               updateFields(
                   w: _word, f: _first, s: _second, t: _third, sy: value);
+              return null;
             },
           ),
           const SizedBox(height: 10.0),
@@ -200,16 +205,16 @@ class _RegisterFormState extends State<RegisterForm> {
   void _insertWord() async {
     // row to insert
     Map<String, dynamic> row = {
-      DatabaseHelper.columnWord: this._word,
-      DatabaseHelper.columnFirst: this._first,
-      DatabaseHelper.columnSecond: this._second,
-      DatabaseHelper.columnThird: this._third,
-      DatabaseHelper.columnSynonyms: this._synonyms,
-      DatabaseHelper.columnActive: this._active,
-      DatabaseHelper.columnPriority: this._priority
+      DatabaseHelper.wColumnWord: this._word,
+      DatabaseHelper.wColumnFirst: this._first,
+      DatabaseHelper.wColumnSecond: this._second,
+      DatabaseHelper.wColumnThird: this._third,
+      DatabaseHelper.wColumnSynonyms: this._synonyms,
+      DatabaseHelper.wColumnActive: this._active,
+      DatabaseHelper.wColumnPriority: this._priority
     };
-    final id = await dbHelper.insert(row);
+    final id = await dbHelper.insertWord(row);
     _formKey.currentState.reset();
-    print('inserted row id: $id');
+    print('Inserted row id: $id');
   }
 }
