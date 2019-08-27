@@ -60,68 +60,67 @@ class _WordListPageState extends State<WordListPage> {
               itemCount: getWordCount(),
               itemBuilder: (BuildContext context, int index) {
                 return Dismissible(
-                    direction: (items[index].active == 0
-                        ? DismissDirection.horizontal
-                        : DismissDirection.startToEnd),
-                    background: Container(
-                      margin: EdgeInsets.all(6.0),
-                      decoration: new BoxDecoration(
-                        color: Colors.orangeAccent,
-                        shape: BoxShape.rectangle,
-                        borderRadius: new BorderRadius.circular(8.0),
-                      ),
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.only(left: 20.0),
-                      //  color: Colors.orangeAccent,
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.edit, color: Colors.white),
-                          SizedBox(width: 10),
-                          Text("Edit",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500))
-                        ],
-                      ),
+                  direction: (items[index].active == 0
+                      ? DismissDirection.horizontal
+                      : DismissDirection.startToEnd),
+                  background: Container(
+                    margin: EdgeInsets.all(6.0),
+                    decoration: new BoxDecoration(
+                      color: Colors.orangeAccent,
+                      shape: BoxShape.rectangle,
+                      borderRadius: new BorderRadius.circular(8.0),
                     ),
-                    secondaryBackground: Container(
-                      margin: EdgeInsets.all(6.0),
-                      decoration: new BoxDecoration(
-                        color: Colors.redAccent,
-                        shape: BoxShape.rectangle,
-                        borderRadius: new BorderRadius.circular(8.0),
-                      ),
-                      alignment: Alignment.centerRight,
-                      padding: EdgeInsets.only(right: 20.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Text("Delete",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500)),
-                          SizedBox(width: 10),
-                          Icon(Icons.delete, color: Colors.white)
-                        ],
-                      ),
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.only(left: 20.0),
+                    //  color: Colors.orangeAccent,
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.edit, color: Colors.white),
+                        SizedBox(width: 10),
+                        Text("Edit",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500))
+                      ],
                     ),
-                    key: new Key(items[index].id.toString()),
-                    dragStartBehavior: DragStartBehavior.down,
-                    confirmDismiss: (direction) async {
-                      return await buildShowDialog(context, direction);
-                    },
-                    onDismissed: (direction) {
-                      onDissmissed(direction, index, context);
-                    },
+                  ),
+                  secondaryBackground: Container(
+                    margin: EdgeInsets.all(6.0),
+                    decoration: new BoxDecoration(
+                      color: Colors.redAccent,
+                      shape: BoxShape.rectangle,
+                      borderRadius: new BorderRadius.circular(8.0),
+                    ),
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.only(right: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Text("Delete",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500)),
+                        SizedBox(width: 10),
+                        Icon(Icons.delete, color: Colors.white)
+                      ],
+                    ),
+                  ),
+                  key: new Key(items[index].id.toString()),
+                  dragStartBehavior: DragStartBehavior.down,
+                  confirmDismiss: (direction) async {
+                    return await buildShowDialog(context, direction);
+                  },
+                  onDismissed: (direction) {
+                    onDissmissed(direction, index, context);
+                  },
+                  child: Card(
                     child: Container(
-                      child: Card(
-                        child: Container(
-                            height: 80.0,
-                            color: Colors.teal[400],
-                            margin: new EdgeInsets.all(0.0),
-                            child: buildItemRow(index)),
-                      ),
-                    ));
+                        height: 80.0,
+                        color: Colors.teal[400],
+                        margin: new EdgeInsets.all(0.0),
+                        child: buildItemRow(index)),
+                  ),
+                );
               })),
     );
   }
@@ -276,9 +275,6 @@ class _WordListPageState extends State<WordListPage> {
         content: new Text("Word deleted successfully."),
       ));
     } else {
-      print("send edit word index:$index\n");
-      int id = items[index].id;
-      print("send edit word id:$id\n");
       var data = items[index];
       setState(() {
         items.remove(items[index]);
@@ -323,7 +319,7 @@ class _WordListPageState extends State<WordListPage> {
   }
 
   void refreshData() async {
-    final allRows = await dbHelper.queryAllRows();
+    final allRows = await dbHelper.getAllWords();
     setState(() {
       items = [];
       items = allRows.map((word) => Word.fromJson(word)).toList();
@@ -331,18 +327,17 @@ class _WordListPageState extends State<WordListPage> {
   }
 
   void update(int id, active) async {
-    print("object");
     Word word = items[id];
     word.active = active;
 
     // Update row
-    await dbHelper.update(word);
+    await dbHelper.updateWord(word);
     refreshData();
   }
 
   void delete(int id) async {
     // Assuming that the number of rows is the id for the last row.
-    await dbHelper.delete(id);
+    await dbHelper.deleteWord(id);
     refreshData();
   }
 
