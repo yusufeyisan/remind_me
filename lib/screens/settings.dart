@@ -53,7 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(
                       "Settings",
                       style: TextStyle(
-                        letterSpacing: 1.2,
+                          letterSpacing: 1.2,
                           color: Colors.black87,
                           fontSize: 24.0,
                           fontWeight: FontWeight.w600),
@@ -62,29 +62,30 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ];
             },
-            body: Container(
-                padding: EdgeInsets.all(10),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 10,
+            body: Padding(
+              padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                child: Container(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text("General Notifications"),
+                          buildGeneralSetting(),
+                          Divider(),
+                          Text("Select Active Hours"),
+                          AbsorbPointer(
+                            absorbing: !enabled,
+                            ignoringSemantics: false,
+                            child: buildNotifyTimeSetting(),
+                          )
+                        ],
                       ),
-                      Text("General Notifications"),
-                      buildGeneralSetting(),
-                      Divider(),
-                      Text("Select Active Hours"),
-                      AbsorbPointer(
-                        absorbing: !enabled,
-                        ignoringSemantics: false,
-                        child: buildNotifyTimeSetting(),
-                      )
-                    ],
-                  ),
-                ))));
+                    )))));
   }
 
 // returns a "Enabled" labels and swich buttom
