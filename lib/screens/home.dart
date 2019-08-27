@@ -43,7 +43,6 @@ class _HomePageState extends State<HomePage> {
                   buttonIcon: Icon(Icons.playlist_add),
                   buttonName: "Add Word",
                   pressButton: () {
-                    print("add word");
                     Navigator.pushNamed(context, '/add_word');
                   }),
               Container(
@@ -53,7 +52,6 @@ class _HomePageState extends State<HomePage> {
                   buttonIcon: Icon(Icons.menu),
                   buttonName: "Show Words",
                   pressButton: () {
-                    print("show word list");
                     Navigator.pushNamed(context, '/word_list');
                   }),
               Container(
@@ -63,7 +61,6 @@ class _HomePageState extends State<HomePage> {
                 buttonIcon: Icon(Icons.settings),
                 buttonName: "Settings",
                 pressButton: () {
-                  print("settings");
                   Navigator.pushNamed(context, '/settings');
                 },
               ),
