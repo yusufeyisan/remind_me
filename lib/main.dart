@@ -14,6 +14,7 @@ class RemindMe extends StatelessWidget {
       title: 'Remind Me',
       theme: themeData,
       initialRoute: '/',
+      debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => HomePage(),
         '/add_word': (context) => AddWordPage(),

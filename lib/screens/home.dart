@@ -14,42 +14,58 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Reminde Me"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new RaisedMenuButton(
-                buttonIcon: Icon(Icons.playlist_add),
-                buttonName: "Add Word",
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: 200.0,
+              floating: false,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                title: Text(
+                  "Remind Me",
+                  style: TextStyle(
+                      letterSpacing: 1.2,
+                      color: Colors.black87,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ];
+        },
+        body: Padding(
+            padding: EdgeInsets.fromLTRB(16.0, 50, 16.0, 8.0),
+            child:  Column(
+            children: <Widget>[
+              new RaisedMenuButton(
+                  buttonIcon: Icon(Icons.playlist_add),
+                  buttonName: "Add Word",
+                  pressButton: () {
+                    Navigator.pushNamed(context, '/add_word');
+                  }),
+              Container(
+                height: 20,
+              ),
+              new RaisedMenuButton(
+                  buttonIcon: Icon(Icons.menu),
+                  buttonName: "Show Words",
+                  pressButton: () {
+                    Navigator.pushNamed(context, '/word_list');
+                  }),
+              Container(
+                height: 20,
+              ),
+              new RaisedMenuButton(
+                buttonIcon: Icon(Icons.settings),
+                buttonName: "Settings",
                 pressButton: () {
-                  print("add word");
-                  Navigator.pushNamed(context, '/add_word');
-                }),
-            Container(
-              height: 20,
-            ),
-            new RaisedMenuButton(
-                buttonIcon: Icon(Icons.menu),
-                buttonName: "Show Word List",
-                pressButton: () {
-                  print("show word list");
-                  Navigator.pushNamed(context, '/word_list');
-                }),
-            Container(
-              height: 20,
-            ),
-            new RaisedMenuButton(
-              buttonIcon: Icon(Icons.settings),
-              buttonName: "Settings",
-              pressButton: () {
-                print("settings");
-                Navigator.pushNamed(context, '/settings');
-              },
-            ),
-          ],
+                  Navigator.pushNamed(context, '/settings');
+                },
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
