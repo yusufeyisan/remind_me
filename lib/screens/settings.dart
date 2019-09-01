@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -13,12 +14,34 @@ const String StartDateMinute = "sm";
 class _SettingsPageState extends State<SettingsPage> {
   final _formKey = GlobalKey<FormState>();
 
+  TextStyle headerStyle = TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.w600,
+    fontStyle: FontStyle.normal,
+  );
+
+  TextStyle labelStyle = TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.w500,
+    fontStyle: FontStyle.normal,
+  );
+
   bool enabled = false;
   int selectedEndHour = 0;
   int selectedEndMinute = 0;
   int selectedStartHour = 0;
   int selectedStartMinute = 0;
+  String selectedDay = "Monday";
 
+  var weekDays = <String>[
+              "Monday",
+              "Thuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday",
+            ];
 // generate hours
   List<int> hours = () {
     List<int> v = [];
@@ -63,204 +86,133 @@ class _SettingsPageState extends State<SettingsPage> {
               ];
             },
             body: Padding(
-              padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
                 child: Container(
                     child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text("General Notifications"),
-                          buildGeneralSetting(),
-                          Divider(),
-                          Text("Select Active Hours"),
-                          AbsorbPointer(
-                            absorbing: !enabled,
-                            ignoringSemantics: false,
-                            child: buildNotifyTimeSetting(),
-                          )
-                        ],
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 10,
                       ),
-                    )))));
+                      Text(
+                        "Activate Notifications",
+                        style: headerStyle,
+                      ),
+                      buildSwitchRow("Enabled"),
+                      Divider(),
+                      Text(
+                        "Select Active Days",
+                        style: headerStyle,
+                      ),
+                      buildStartWeekRow("Start Week"),
+                      buildSwitchRow("Weekdays"),
+                      buildSwitchRow("Weekend"),
+                    ],
+                  ),
+                )))));
   }
 
-// returns a "Enabled" labels and swich buttom
-  Container buildGeneralSetting() {
+// returns a row with switch buttom
+  Container buildSwitchRow(String name) {
     return Container(
       decoration: BoxDecoration(
         border: new Border.all(color: Colors.grey[400]),
         borderRadius: new BorderRadius.all(Radius.circular(5)),
       ),
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
       margin: EdgeInsets.only(top: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text("Enabled"),
+          Text(
+            name,
+            style: labelStyle,
+          ),
           Expanded(
             child: Container(
               width: double.maxFinite,
             ),
           ),
-          Container(
+          Transform.scale(
+              scale: 1.3,
               child: Switch(
-            value: enabled,
-            onChanged: (v) {
-              setState(() {
-                enabled = v;
-              });
-            },
-            activeColor: Colors.green,
-          )),
+                value: enabled,
+                dragStartBehavior: DragStartBehavior.start,
+                onChanged: (v) {
+                  setState(() {
+                    enabled = v;
+                  });
+                },
+                activeColor: Colors.green,
+              )),
         ],
       ),
     );
   }
 
-// returns start and end date of notify
-  Container buildNotifyTimeSetting() {
+// returns a "start week" label and swich button row
+  Container buildStartWeekRow(String name) {
     return Container(
-        decoration: BoxDecoration(
-            border: new Border.all(color: Colors.grey[400]),
-            borderRadius: new BorderRadius.all(Radius.circular(5))),
-        padding: EdgeInsets.all(15),
-        margin: EdgeInsets.only(top: 15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("Start Time"),
-            Divider(),
-            SizedBox(
-              height: 10,
+      decoration: BoxDecoration(
+        border: new Border.all(color: Colors.grey[400]),
+        borderRadius: new BorderRadius.all(Radius.circular(5)),
+      ),
+      padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+      margin: EdgeInsets.only(top: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            name,
+            style: labelStyle,
+          ),
+          Expanded(
+            child: Container(
+              width: double.maxFinite,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  child: Text("Hour"),
-                ),
-                Container(
-                  width: 100,
-                  child: Text("Minute"),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  child: getDropdownItems(hours, StartDateHour),
-                ),
-                Container(
-                  width: 100,
-                  child: getDropdownItems(minutes, StartDateMinute),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text("End Time"),
-            Divider(),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  child: Text("Hour"),
-                ),
-                Container(
-                  width: 100,
-                  child: Text("Minute"),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  child: getDropdownItems(hours, EndDateHour),
-                ),
-                Container(
-                  width: 100,
-                  child: getDropdownItems(minutes, EndDateMinute),
-                ),
-              ],
-            ),
-          ],
-        ));
+          ),
+          DropdownButton(
+            isDense: false,
+            elevation: 1,
+            isExpanded: false,
+            value: selectedDay,
+            icon: Icon(Icons.arrow_drop_down),
+            onChanged: (v) {
+             updateSelectedDropdownValue(v);
+            },
+            items: <String>[
+              "Monday",
+              "Thuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday",
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          )
+        ],
+      ),
+    );
   }
 
-// returns dropdowns of hour andminutes
-  DropdownButton<int> getDropdownItems(List<int> itemList, String s) {
-    return DropdownButton(
-        isDense: false,
-        elevation: 10,
-        isExpanded: true,
-        value: (s == StartDateHour
-            ? selectedStartHour
-            : (s == StartDateMinute
-                ? selectedStartMinute
-                : (s == EndDateHour ? selectedEndHour : selectedEndMinute))),
-        icon: Icon(Icons.arrow_drop_down),
-        items: itemList.map((int v) {
-          return new DropdownMenuItem<int>(
-            value: v,
-            child: Text(
-              v.toString(),
-              overflow: TextOverflow.ellipsis,
-            ),
-          );
-        }).toList(),
-        onChanged: (v) {
-          updateSelectedDropdownValue(s, v);
-        });
-  }
 
-  void updateSelectedDropdownValue(String selector, int v) {
+  void updateSelectedDropdownValue( String v) {
     setState(() {
-      switch (selector) {
-        case StartDateHour:
-          selectedStartHour = v;
-          break;
-        case StartDateMinute:
-          selectedStartMinute = v;
-          break;
-        case EndDateHour:
-          selectedEndHour = v;
-          break;
-        case EndDateMinute:
-          selectedEndMinute = v;
-          break;
-        default:
-      }
+      selectedDay = v;
     });
   }
 
   getSelectedDropdownValue(String s) {
     setState(() {
-      switch (s) {
-        case StartDateHour:
-          return selectedStartHour;
-        case StartDateHour:
-          return selectedStartMinute;
-        case EndDateHour:
-          return selectedEndHour;
-        case EndDateMinute:
-          return selectedEndMinute;
-        default:
-      }
+      
     });
   }
 }
