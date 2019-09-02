@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:remind_me/models/setting.dart';
+import '../data/database_helper.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -14,6 +16,9 @@ const String StartDateMinute = "sm";
 class _SettingsPageState extends State<SettingsPage> {
   final _formKey = GlobalKey<FormState>();
 
+  // reference to our single class that manages the database
+  final dbHelper = DatabaseHelper.instance;
+
   TextStyle headerStyle = TextStyle(
     fontSize: 18.0,
     fontWeight: FontWeight.w600,
@@ -27,38 +32,24 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   bool enabled = false;
-  int selectedEndHour = 0;
-  int selectedEndMinute = 0;
-  int selectedStartHour = 0;
-  int selectedStartMinute = 0;
-  String selectedDay = "Monday";
+  Setting settingModel;
+
+  int _enabled = 0;
+  int _weekend = 0;
+  int _workDays = 0;
+  String _endDate = "";
+  String _startDate = "";
+  String _startWeek = "Monday";
 
   var weekDays = <String>[
-              "Monday",
-              "Thuesday",
-              "Wednesday",
-              "Thursday",
-              "Friday",
-              "Saturday",
-              "Sunday",
-            ];
-// generate hours
-  List<int> hours = () {
-    List<int> v = [];
-    for (var i = 0; i < 24; i++) {
-      v.add(i);
-    }
-    return v;
-  }();
-
-// generate minutes
-  List<int> minutes = () {
-    List<int> v = [];
-    for (var i = 0; i < 60; i++) {
-      v.add(i);
-    }
-    return v;
-  }();
+    "Monday",
+    "Thuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -101,22 +92,62 @@ class _SettingsPageState extends State<SettingsPage> {
                         "Activate Notifications",
                         style: headerStyle,
                       ),
-                      buildSwitchRow("Enabled"),
+                      buildSwitchRow("Enabled", _enabled),
                       Divider(),
                       Text(
                         "Select Active Days",
                         style: headerStyle,
                       ),
-                      buildStartWeekRow("Start Week"),
-                      buildSwitchRow("Weekdays"),
-                      buildSwitchRow("Weekend"),
+                      buildStartWeekRow("Start Week", _startWeek),
+                      buildSwitchRow("Weekdays", _workDays),
+                      buildSwitchRow("Weekend", _workDays),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          OutlineButton(
+                            highlightedBorderColor: Colors.pinkAccent,
+                            onPressed: _submittable() ? _submit : null,
+                            color: Colors.pinkAccent,
+                            child: const Text('Save'),
+                          )
+                        ],
+                      ),
                     ],
                   ),
                 )))));
   }
 
+  bool _submittable() {
+    return true;
+  }
+
+  void _submit() {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      setState(() {
+        form.save();
+        _insertSettings();
+      });
+    }
+  }
+
+  void _insertSettings() async {
+    // row to insert
+    Map<String, dynamic> row = {
+      DatabaseHelper.sColumnWeekend: this._weekend,
+      DatabaseHelper.sColumnEnabled: this._enabled,
+      DatabaseHelper.sColumnEndDate: this._endDate,
+      DatabaseHelper.sColumnWorkDays: this._workDays,
+      DatabaseHelper.sColumnStartDate: this._startDate,
+      DatabaseHelper.sColumnStartWeek: this._startWeek,
+    };
+    final id = await dbHelper.insertSetting(row);
+    _formKey.currentState.reset();
+    print('Inserted row id: $id');
+  }
+
 // returns a row with switch buttom
-  Container buildSwitchRow(String name) {
+  Container buildSwitchRow(String name, int value) {
     return Container(
       decoration: BoxDecoration(
         border: new Border.all(color: Colors.grey[400]),
@@ -139,11 +170,34 @@ class _SettingsPageState extends State<SettingsPage> {
           Transform.scale(
               scale: 1.3,
               child: Switch(
-                value: enabled,
+                value: (value == 0) ? false : true,
                 dragStartBehavior: DragStartBehavior.start,
                 onChanged: (v) {
+                  var m = settingModel;
+
+                  switch (name) {
+                    case "Enabled":
+                      m.enabled = v ? 1 : 0;
+                      setState(() {
+                        _enabled = m.enabled;
+                      });
+                      break;
+                    case "WeekDays":
+                      m.workDays = v ? 1 : 0;
+                       setState(() {
+                        _workDays = m.workDays;
+                      });
+                      break;
+                    case "Weekend":
+                      m.weekend = v ? 1 : 0;
+                       setState(() {
+                        _weekend = m.weekend;
+                      });
+                      break;
+                    default:
+                  }
                   setState(() {
-                    enabled = v;
+                    settingModel = m;
                   });
                 },
                 activeColor: Colors.green,
@@ -154,7 +208,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
 // returns a "start week" label and swich button row
-  Container buildStartWeekRow(String name) {
+  Container buildStartWeekRow(String name, String day) {
     return Container(
       decoration: BoxDecoration(
         border: new Border.all(color: Colors.grey[400]),
@@ -176,25 +230,22 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           DropdownButton(
             isDense: false,
-            elevation: 1,
+            elevation: 8,
             isExpanded: false,
-            value: selectedDay,
+            value: day,
             icon: Icon(Icons.arrow_drop_down),
             onChanged: (v) {
-             updateSelectedDropdownValue(v);
+              updateSelectedDropdownValue(v);
             },
-            items: <String>[
-              "Monday",
-              "Thuesday",
-              "Wednesday",
-              "Thursday",
-              "Friday",
-              "Saturday",
-              "Sunday",
-            ].map<DropdownMenuItem<String>>((String value) {
+            items: weekDays.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Container(
+                  child: Text(value),
+                  padding: EdgeInsets.only(
+                    left: 25,
+                  ),
+                ),
               );
             }).toList(),
           )
@@ -203,16 +254,35 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+    refreshData();
+  }
 
-  void updateSelectedDropdownValue( String v) {
+  void refreshData() async {
+    final allRows = await dbHelper.getAllSettings();
+    print(allRows);
+    var settingModels =
+        allRows.map((setting) => Setting.fromJson(setting)).toList();
+
     setState(() {
-      selectedDay = v;
+      if (settingModels.length > 0) {
+        settingModel = null;
+        settingModel = settingModels[0];
+      }
     });
   }
 
-  getSelectedDropdownValue(String s) {
+  void update(Setting model) async {
+    // Update row
+    await dbHelper.updateSetting(model);
+    refreshData();
+  }
+
+  void updateSelectedDropdownValue(String v) {
     setState(() {
-      
+      _startWeek = v;
     });
   }
 }
