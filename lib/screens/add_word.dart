@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remind_me/models/word.dart';
 import '../data/database_helper.dart';
-import 'dart:async';
-
 class AddWordPage extends StatefulWidget {
   @override
   _AddWordPageState createState() => _AddWordPageState();
