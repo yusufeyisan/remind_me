@@ -7,7 +7,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper {
-  static final _databaseName = "RemindMeDB.db";
+  static final _databaseName = "RemindMeDatabase.db";
   static final _databaseVersion = 1;
 
   // table and column names for Word table
@@ -29,6 +29,8 @@ class DatabaseHelper {
   static final sColumnEndDate = 'endDate';
   static final sColumnStartDate = 'startDate';
   static final sColumnWorkDays = 'workDays';
+  static final sColumnWeekend = 'weekend';
+  static final sColumnStartWeek = 'startWeek';
 
   // make this a singleton class
   DatabaseHelper._privateConstructor();
@@ -53,6 +55,19 @@ class DatabaseHelper {
 
   // SQL code to create the database table
   void _onCreate(Database db, int version) async {
+    // Create settings table
+    await db.execute('''
+      CREATE TABLE $sTable (
+        $sColumnId INTEGER PRIMARY KEY,
+        $sColumnEnabled INTEGER NOT NULL,
+        $sColumnStartDate TEXT NOT NULL,
+        $sColumnEndDate TEXT NOT NULL,
+        $sColumnStartWeek TEXT NOT NULL,
+        $sColumnWeekend INTEGER NOT NULL,
+        $sColumnWorkDays INTEGER NOT NULL,
+      )
+    ''');
+
     // Create words table
     await db.execute('''
       CREATE TABLE $wTable (
@@ -67,16 +82,6 @@ class DatabaseHelper {
       )
     ''');
 
-    // Create settings table
-    await db.execute('''
-      CREATE TABLE $sTable (
-        $sColumnId INTEGER PRIMARY KEY,
-        $sColumnEnabled INTEGER NOT NULL,
-        $sColumnStartDate TEXT NOT NULL,
-        $sColumnEndDate TEXT NOT NULL,
-        $sColumnWorkDays INTEGER NOT NULL
-      )
-    ''');
     print("Table was created");
   }
 
@@ -166,6 +171,8 @@ class DatabaseHelper {
       DatabaseHelper.sColumnStartDate: s.startDate,
       DatabaseHelper.sColumnEndDate: s.endDate,
       DatabaseHelper.sColumnWorkDays: s.workDays,
+      DatabaseHelper.sColumnWeekend: s.weekend,
+      DatabaseHelper.sColumnStartWeek: s.startWeek,
     };
 
     Database db = await instance.database;
@@ -200,6 +207,7 @@ class DatabaseHelper {
     }
     return null;
   }
+
   // Word Table
   // Deletes the row specified by the id. The number of affected rows is
   // returned. This should be 1 as long as the row exists.
@@ -207,6 +215,7 @@ class DatabaseHelper {
     Database db = await instance.database;
     return await db.delete(wTable, where: '$wColumnId = ?', whereArgs: [id]);
   }
+
   // Setting Table
   // Deletes the row specified by the id. The number of affected rows is
   // returned. This should be 1 as long as the row exists.
