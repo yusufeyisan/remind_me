@@ -64,7 +64,7 @@ class DatabaseHelper {
         $sColumnEndDate TEXT NOT NULL,
         $sColumnStartWeek TEXT NOT NULL,
         $sColumnWeekend INTEGER NOT NULL,
-        $sColumnWorkDays INTEGER NOT NULL,
+        $sColumnWorkDays INTEGER NOT NULL
       )
     ''');
 

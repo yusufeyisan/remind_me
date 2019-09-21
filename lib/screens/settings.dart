@@ -86,7 +86,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(
-                        height: 10,
+                        height: 20,
                       ),
                       Text(
                         "Activate Notifications",
@@ -100,7 +100,15 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       buildStartWeekRow("Start Week", _startWeek),
                       buildSwitchRow("Weekdays", _workDays),
-                      buildSwitchRow("Weekend", _workDays),
+                      buildSwitchRow("Weekend", _weekend),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Set Active Hours",
+                        style: headerStyle,
+                      ),
+                      buildActiveHoursRow(_startDate, _endDate),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
@@ -184,13 +192,13 @@ class _SettingsPageState extends State<SettingsPage> {
                       break;
                     case "WeekDays":
                       m.workDays = v ? 1 : 0;
-                       setState(() {
+                      setState(() {
                         _workDays = m.workDays;
                       });
                       break;
                     case "Weekend":
                       m.weekend = v ? 1 : 0;
-                       setState(() {
+                      setState(() {
                         _weekend = m.weekend;
                       });
                       break;
@@ -202,6 +210,62 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
                 activeColor: Colors.green,
               )),
+        ],
+      ),
+    );
+  }
+
+// returns a row with switch buttom
+  Container buildActiveHoursRow(String start, end) {
+    return Container(
+      decoration: BoxDecoration(
+        border: new Border.all(color: Colors.grey[400]),
+        borderRadius: new BorderRadius.all(Radius.circular(5)),
+      ),
+      padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+      margin: EdgeInsets.only(top: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              height: 50,
+              width: double.infinity,
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    "Start",
+                    style: labelStyle,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey[300],
+                        border: Border.all(color: Colors.grey)),
+                        padding: EdgeInsets.all(12),
+                        margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        child: Text("HH"),
+                  ),
+                  Text(":"),
+                     Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey[300],
+                        border: Border.all(color: Colors.grey)),
+                        padding: EdgeInsets.all(12),
+                        margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        child: Text("MM"),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            child: Text(
+              "End",
+              style: labelStyle,
+            ),
+          )
         ],
       ),
     );
