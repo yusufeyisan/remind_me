@@ -227,7 +227,7 @@ class _EditWordPageState extends State<EditWordPage> {
     final form = _formKey.currentState;
     if (form.validate()) {
       print('Form is valid');
-      await updateWord();
+      updateWord();
       return true;
     } else {
       print("object yusuf");
