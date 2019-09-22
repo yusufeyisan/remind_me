@@ -1,7 +1,8 @@
+import '../data/database_helper.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:remind_me/models/setting.dart';
-import '../data/database_helper.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -37,8 +38,8 @@ class _SettingsPageState extends State<SettingsPage> {
   int _enabled = 0;
   int _weekend = 0;
   int _workDays = 0;
-  String _endDate = "";
-  String _startDate = "";
+  String _endDate =  DateTime.now().add(Duration(hours: 8)).toString();
+  String _startDate = DateTime.now().toString();
   String _startWeek = "Monday";
 
   var weekDays = <String>[
@@ -54,6 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false ,
         body: NestedScrollView(
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
@@ -110,14 +112,17 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       buildActiveHoursRow(_startDate, _endDate),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          OutlineButton(
-                            highlightedBorderColor: Colors.pinkAccent,
-                            onPressed: _submittable() ? _submit : null,
-                            color: Colors.pinkAccent,
-                            child: const Text('Save'),
-                          )
+                          FlatButton(
+                              padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
+                              onPressed: _submittable() ? _submit : null,
+                              color: Colors.blue,
+                              child: const Text(
+                                'Save',
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.white),
+                              ))
                         ],
                       ),
                     ],
@@ -228,42 +233,69 @@ class _SettingsPageState extends State<SettingsPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: Container(
-              height: 50,
-              width: double.infinity,
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    "Start",
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                FlatButton(
+                  child: Text(
+                    "From",
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                  onPressed: () {
+                    DatePicker.showTimePicker(context, showTitleActions: true,
+                        onChanged: (date) {
+                      print('change $date in time zone ' +
+                          date.timeZoneOffset.inHours.toString());
+                    }, onConfirm: (date) {
+                      print('confirm ${date.toString()}');
+                      setState(() {
+                        _startDate = date.toString();
+                      });
+                    }, currentTime:  DateTime.now());//DateTime.parse(_startDate));
+                  },
+                ),
+                Container(
+                  child: Text(
+                    _startDate.substring(10, 19),
                     style: labelStyle,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[300],
-                        border: Border.all(color: Colors.grey)),
-                        padding: EdgeInsets.all(12),
-                        margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                        child: Text("HH"),
-                  ),
-                  Text(":"),
-                     Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[300],
-                        border: Border.all(color: Colors.grey)),
-                        padding: EdgeInsets.all(12),
-                        margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                        child: Text("MM"),
-                  ),
-                ],
-              ),
+                  padding: EdgeInsets.all(10),
+                )
+              ],
             ),
           ),
-          Container(
-            child: Text(
-              "End",
-              style: labelStyle,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlatButton(
+                  child: Text(
+                    "From",
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                  onPressed: () {
+                    DatePicker.showTimePicker(context, showTitleActions: true,
+                        onChanged: (date) {
+                        print('change $date in time zone ' +
+                          date.timeZoneOffset.inHours.toString());
+                    }, onConfirm: (date) {
+                      print('confirm ${date.toString()}');
+                      setState(() {
+                        _endDate = date.toString();
+                      });
+                    }, currentTime:DateTime.now());// DateTime.parse(_endDate));
+                  },
+                ),
+                Container(
+                  child: Text(
+                    _endDate.substring(10, 19),
+                    style: labelStyle,
+                  ),
+                  padding: EdgeInsets.all(10),
+                ),
+              ],
             ),
           )
         ],
