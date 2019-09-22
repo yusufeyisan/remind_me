@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   sqflite: any
   path_provider: ^0.4.0
+  flutter_datetime_picker: ^1.2.6
 
 dev_dependencies:
   flutter_test:
