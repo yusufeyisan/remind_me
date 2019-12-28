@@ -38,7 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
   int _enabled = 0;
   int _weekend = 0;
   int _workDays = 0;
-  String _endDate =  DateTime.now().add(Duration(hours: 8)).toString();
+  String _endDate = DateTime.now().add(Duration(hours: 8)).toString();
   String _startDate = DateTime.now().toString();
   String _startWeek = "Monday";
 
@@ -55,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false ,
+        resizeToAvoidBottomPadding: false,
         body: NestedScrollView(
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
@@ -83,49 +83,51 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Container(
                     child: Form(
                   key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Activate Notifications",
-                        style: headerStyle,
-                      ),
-                      buildSwitchRow("Enabled", _enabled),
-                      Divider(),
-                      Text(
-                        "Select Active Days",
-                        style: headerStyle,
-                      ),
-                      buildStartWeekRow("Start Week", _startWeek),
-                      buildSwitchRow("Weekdays", _workDays),
-                      buildSwitchRow("Weekend", _weekend),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Set Active Hours",
-                        style: headerStyle,
-                      ),
-                      buildActiveHoursRow(_startDate, _endDate),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          FlatButton(
-                              padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
-                              onPressed: _submittable() ? _submit : null,
-                              color: Colors.blue,
-                              child: const Text(
-                                'Save',
-                                style: TextStyle(
-                                    fontSize: 20, color: Colors.white),
-                              ))
-                        ],
-                      ),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Activate Notifications",
+                          style: headerStyle,
+                        ),
+                        buildSwitchRow("Enabled", _enabled),
+                        Divider(),
+                        Text(
+                          "Select Active Days",
+                          style: headerStyle,
+                        ),
+                        buildStartWeekRow("Start Week", _startWeek),
+                        buildSwitchRow("Weekdays", _workDays),
+                        buildSwitchRow("Weekend", _weekend),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Set Active Hours",
+                          style: headerStyle,
+                        ),
+                        buildActiveHoursRow(_startDate, _endDate),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            FlatButton(
+                                padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
+                                onPressed: _submittable() ? _submit : null,
+                                color: Colors.blue,
+                                child: const Text(
+                                  'Save',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.white),
+                                ))
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 )))));
   }
@@ -252,7 +254,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       setState(() {
                         _startDate = date.toString();
                       });
-                    }, currentTime:  DateTime.now());//DateTime.parse(_startDate));
+                    },
+                        currentTime:
+                            DateTime.now()); //DateTime.parse(_startDate));
                   },
                 ),
                 Container(
@@ -278,14 +282,16 @@ class _SettingsPageState extends State<SettingsPage> {
                   onPressed: () {
                     DatePicker.showTimePicker(context, showTitleActions: true,
                         onChanged: (date) {
-                        print('change $date in time zone ' +
+                      print('change $date in time zone ' +
                           date.timeZoneOffset.inHours.toString());
                     }, onConfirm: (date) {
                       print('confirm ${date.toString()}');
                       setState(() {
                         _endDate = date.toString();
                       });
-                    }, currentTime:DateTime.now());// DateTime.parse(_endDate));
+                    },
+                        currentTime:
+                            DateTime.now()); // DateTime.parse(_endDate));
                   },
                 ),
                 Container(
