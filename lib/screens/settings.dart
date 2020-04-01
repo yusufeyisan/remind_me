@@ -15,7 +15,7 @@ const String EndDateMinute = "em";
 const String StartDateMinute = "sm";
 
 class _SettingsPageState extends State<SettingsPage> {
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
   // reference to our single class that manages the database
   final dbHelper = DatabaseHelper.instance;
@@ -82,7 +82,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
                 child: Container(
                     child: Form(
-                  key: _formKey,
+                  key: formKey,
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -117,7 +117,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           children: <Widget>[
                             FlatButton(
                                 padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
-                                onPressed: _submittable() ? _submit : null,
+                                onPressed: submitForm,
                                 color: Colors.blue,
                                 child: const Text(
                                   'Save',
@@ -132,21 +132,38 @@ class _SettingsPageState extends State<SettingsPage> {
                 )))));
   }
 
-  bool _submittable() {
-    return true;
-  }
-
-  void _submit() {
-    final form = _formKey.currentState;
-    if (form.validate()) {
-      setState(() {
-        form.save();
-        _insertSettings();
-      });
+  Future<int> getSettingId() async {
+    final allRows = await dbHelper.getAllSettings();
+    var settingModels =
+        allRows.map((setting) => Setting.fromJson(setting)).toList();
+    if (settingModels.length > 0) {
+      return settingModels[settingModels.length - 1].id;
     }
+    return 0;
   }
 
-  void _insertSettings() async {
+  void submitForm() {
+    final form = formKey.currentState;
+    if (!form.validate()) {
+      print("invalid form data");
+    }
+    setState(() {
+      form.save();
+      getSettingId().then((id) {
+        if (id != 0) {
+          print("update stage: " + id.toString());
+          updateSettings(id);
+          return;
+        }
+
+        print("insert stage");
+        insertSettings();
+        return;
+      });
+    });
+  }
+
+  void insertSettings() async {
     // row to insert
     Map<String, dynamic> row = {
       DatabaseHelper.sColumnWeekend: this._weekend,
@@ -157,8 +174,17 @@ class _SettingsPageState extends State<SettingsPage> {
       DatabaseHelper.sColumnStartWeek: this._startWeek,
     };
     final id = await dbHelper.insertSetting(row);
-    _formKey.currentState.reset();
+    formKey.currentState.reset();
     print('Inserted row id: $id');
+  }
+
+  void updateSettings(int _id) async {
+    Setting setting = new Setting(_id, this._enabled, this._startDate,
+        this._endDate, this._workDays, this._startWeek, this._weekend);
+
+    final id = await dbHelper.updateSetting(setting);
+    formKey.currentState.reset();
+    print('updated row id: $id');
   }
 
 // returns a row with switch buttom
@@ -276,7 +302,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: <Widget>[
                 FlatButton(
                   child: Text(
-                    "From",
+                    "To",
                     style: TextStyle(color: Colors.blue),
                   ),
                   onPressed: () {
@@ -364,22 +390,25 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void refreshData() async {
     final allRows = await dbHelper.getAllSettings();
-    print(allRows);
     var settingModels =
         allRows.map((setting) => Setting.fromJson(setting)).toList();
 
     setState(() {
       if (settingModels.length > 0) {
         settingModel = null;
-        settingModel = settingModels[0];
+        this.settingModel = settingModels[settingModels.length - 1];
       }
     });
-  }
 
-  void update(Setting model) async {
-    // Update row
-    await dbHelper.updateSetting(model);
-    refreshData();
+    setState(() {
+      // set form fields
+      _endDate = settingModel.endDate;
+      _startDate = settingModel.startDate;
+      _startWeek = settingModel.startWeek;
+      _enabled = settingModel.enabled;
+      _weekend = settingModel.weekend;
+      _workDays = settingModel.workDays;
+    });
   }
 
   void updateSelectedDropdownValue(String v) {

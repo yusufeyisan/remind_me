@@ -9,6 +9,7 @@ class Setting {
 
 // constracture
   Setting(
+    this._id,
     this._enabled,
     this._startDate,
     this._endDate,
