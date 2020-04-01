@@ -389,6 +389,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void refreshData() async {
+    print("resfresh data");
     final allRows = await dbHelper.getAllSettings();
     var settingModels =
         allRows.map((setting) => Setting.fromJson(setting)).toList();
