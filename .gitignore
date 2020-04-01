@@ -17,6 +17,9 @@
 .idea/
 
 # Visual Studio Code related
+.classpath
+.project
+.settings/
 .vscode/
 
 # Flutter repo-specific
@@ -29,6 +32,8 @@
 /dev/docs/flutter.docs.zip
 /dev/docs/lib/
 /dev/docs/pubspec.yaml
+/dev/integration_tests/**/xcuserdata
+/dev/integration_tests/**/Pods
 /packages/flutter/coverage/
 version
 
@@ -39,6 +44,7 @@ version
 **/doc/api/
 .dart_tool/
 .flutter-plugins
+.flutter-plugins-dependencies
 .packages
 .pub-cache/
 .pub/
@@ -78,15 +84,19 @@ unlinked_spec.ds
 **/ios/.generated/
 **/ios/Flutter/App.framework
 **/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
 **/ios/Flutter/Generated.xcconfig
 **/ios/Flutter/app.flx
 **/ios/Flutter/app.zip
 **/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 
 # Coverage
 coverage/
+.test_coverage.dart
+*.lcov
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
@@ -94,8 +104,4 @@ coverage/
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-android/.gradle/4.10.2/fileHashes/fileHashes.bin
-android/.gradle/4.10.2/fileHashes/fileHashes.lock
-android/.gradle/4.10.2/taskHistory/taskHistory.bin
-android/.gradle/4.10.2/taskHistory/taskHistory.lock
-android/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+!/dev/ci/**/Gemfile.lock
