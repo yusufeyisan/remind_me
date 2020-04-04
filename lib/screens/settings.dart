@@ -144,19 +144,15 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void submitForm() {
     final form = formKey.currentState;
-    if (!form.validate()) {
-      print("invalid form data");
-    }
+    if (!form.validate()) {}
     setState(() {
       form.save();
       getSettingId().then((id) {
         if (id != 0) {
-          print("update stage: " + id.toString());
           updateSettings(id);
           return;
         }
 
-        print("insert stage");
         insertSettings();
         return;
       });
@@ -173,18 +169,16 @@ class _SettingsPageState extends State<SettingsPage> {
       DatabaseHelper.sColumnStartDate: this._startDate,
       DatabaseHelper.sColumnStartWeek: this._startWeek,
     };
-    final id = await dbHelper.insertSetting(row);
+    await dbHelper.insertSetting(row);
     formKey.currentState.reset();
-    print('Inserted row id: $id');
   }
 
   void updateSettings(int _id) async {
     Setting setting = new Setting(_id, this._enabled, this._startDate,
         this._endDate, this._workDays, this._startWeek, this._weekend);
 
-    final id = await dbHelper.updateSetting(setting);
+    await dbHelper.updateSetting(setting);
     formKey.currentState.reset();
-    print('updated row id: $id');
   }
 
 // returns a row with switch buttom
@@ -271,18 +265,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     style: TextStyle(color: Colors.blue),
                   ),
                   onPressed: () {
-                    DatePicker.showTimePicker(context, showTitleActions: true,
-                        onChanged: (date) {
-                      print('change $date in time zone ' +
-                          date.timeZoneOffset.inHours.toString());
-                    }, onConfirm: (date) {
-                      print('confirm ${date.toString()}');
+                    DatePicker.showTimePicker(context,
+                        showTitleActions: true,
+                        onChanged: (date) {}, onConfirm: (date) {
                       setState(() {
                         _startDate = date.toString();
                       });
-                    },
-                        currentTime:
-                            DateTime.now()); //DateTime.parse(_startDate));
+                    }, currentTime: DateTime.now());
                   },
                 ),
                 Container(
@@ -306,12 +295,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     style: TextStyle(color: Colors.blue),
                   ),
                   onPressed: () {
-                    DatePicker.showTimePicker(context, showTitleActions: true,
-                        onChanged: (date) {
-                      print('change $date in time zone ' +
-                          date.timeZoneOffset.inHours.toString());
-                    }, onConfirm: (date) {
-                      print('confirm ${date.toString()}');
+                    DatePicker.showTimePicker(context,
+                        showTitleActions: true,
+                        onChanged: (date) {}, onConfirm: (date) {
                       setState(() {
                         _endDate = date.toString();
                       });
@@ -389,7 +375,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void refreshData() async {
-    print("resfresh data");
     final allRows = await dbHelper.getAllSettings();
     var settingModels =
         allRows.map((setting) => Setting.fromJson(setting)).toList();
