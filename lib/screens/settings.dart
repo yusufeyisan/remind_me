@@ -209,7 +209,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 dragStartBehavior: DragStartBehavior.start,
                 onChanged: (v) {
                   var m = settingModel;
-
+                  if (m == null) {
+                    m = new Setting(0, _enabled, _startDate, _endDate, _workDays, _startWeek, _weekend);
+                  }
+                  print("\nLOG: "+name);
                   switch (name) {
                     case "Enabled":
                       m.enabled = v ? 1 : 0;
@@ -236,6 +239,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   });
                 },
                 activeColor: Colors.green,
+                
               )),
         ],
       ),

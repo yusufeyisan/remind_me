@@ -59,6 +59,7 @@ class _WordListPageState extends State<WordListPage> {
           body: new ListView.builder(
               itemCount: getWordCount(),
               itemBuilder: (BuildContext context, int index) {
+                print("hello empty world");
                 return Dismissible(
                   direction: (items[index].active == 0
                       ? DismissDirection.horizontal
