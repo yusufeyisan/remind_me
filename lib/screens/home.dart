@@ -36,8 +36,8 @@ class _HomePageState extends State<HomePage> {
           ];
         },
         body: Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 50, 16.0, 8.0),
-            child:  Column(
+          padding: EdgeInsets.fromLTRB(16.0, 50, 16.0, 8.0),
+          child: Column(
             children: <Widget>[
               new RaisedMenuButton(
                   buttonIcon: Icon(Icons.playlist_add),
@@ -58,10 +58,10 @@ class _HomePageState extends State<HomePage> {
                 height: 20,
               ),
               new RaisedMenuButton(
-                buttonIcon: Icon(Icons.settings),
-                buttonName: "Settings",
+                buttonIcon: Icon(Icons.notifications),
+                buttonName: "Notifications",
                 pressButton: () {
-                  Navigator.pushNamed(context, '/settings');
+                  Navigator.pushNamed(context, '/notifications');
                 },
               ),
             ],
@@ -69,10 +69,11 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), title: Text("Settngs")),
+              icon: Icon(Icons.settings), title: Text("Settings")),
         ],
         fixedColor: Colors.deepPurple,
         onTap: (i) {
