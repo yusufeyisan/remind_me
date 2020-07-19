@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:remind_me/models/word.dart';
+import 'package:remind_me/notification_manager.dart';
 import './screens/home.dart';
 import './screens/add_word.dart';
 import './screens/word_list.dart';
 import './screens/settings.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(RemindMe());
+Future<void> main() async {
+  runApp(RemindMe());
+}
 
 class RemindMe extends StatelessWidget {
   // This widget is the root of your application.
@@ -19,7 +25,9 @@ class RemindMe extends StatelessWidget {
         '/': (context) => HomePage(),
         '/add_word': (context) => AddWordPage(),
         '/word_list': (context) => WordListPage(),
-        '/settings': (context) => SettingsPage()
+        '/settings': (context) => SettingsPage(),
+        '/notifications': (context) =>
+            NotificationManager(Duration(seconds: 0)),
       },
     );
   }

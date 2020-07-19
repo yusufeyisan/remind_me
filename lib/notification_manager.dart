@@ -1,63 +1,80 @@
-/*import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:remind_me/screens/home.dart';
 
-class NotificationManager {
-  var flutterLocalNotificationsPlugin;
+import 'notification_helper.dart';
 
-  NotificationManager() {
-    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    initNotifications();
-  }
+// ignore: must_be_immutable
+class NotificationManager extends StatefulWidget {
+  Duration d;
 
-  getNotificationInstance() {
-    return flutterLocalNotificationsPlugin;
-  }
+  NotificationManager(this.d);
 
-  void initNotifications() {
-    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-    var initializationSettingsAndroid =
-        new AndroidInitializationSettings('@mipmap/launcher_icon');
-    var initializationSettingsIOS = IOSInitializationSettings(
-        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+  @override
+  _NotificationManagerState createState() => _NotificationManagerState(d);
+}
 
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+class _NotificationManagerState extends State<NotificationManager> {
+  @required
+  Duration d;
+  _NotificationManagerState(this.d);
 
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+  final notification = FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+    final androidSetings = AndroidInitializationSettings("app_icon");
+    final iosSettings = IOSInitializationSettings(
+        onDidReceiveLocalNotification: (id, title, body, payload) =>
+            onSelectNotification(payload));
+
+    notification.initialize(InitializationSettings(androidSetings, iosSettings),
         onSelectNotification: onSelectNotification);
   }
 
-  void showNotificationDaily(
-      int id, String title, String body, int hour, int minute) async {
-    var time = new Time(hour, minute, 0);
-    await flutterLocalNotificationsPlugin.showDailyAtTime(
-        id, title, body, time, getPlatformChannelSpecfics());
-    print('Notification Succesfully Scheduled at ${time.toString()}');
-  }
+  Future onSelectNotification(String payload) async => await Navigator.push(
+      context, MaterialPageRoute(builder: (context) => HomePage()));
 
-  getPlatformChannelSpecfics() {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',
-        importance: Importance.Max,
-        priority: Priority.High,
-        ticker: 'Medicine Reminder');
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-
-    return platformChannelSpecifics;
-  }
-
-  Future onSelectNotification(String payload) async {
-    print('Notification clicked');
-    return Future.value(0);
-  }
-
-  Future onDidReceiveLocalNotification(
-      int id, String title, String body, String payload) async {
-    return Future.value(1);
-  }
-
-  void removeReminder(int notificationId) {
-    flutterLocalNotificationsPlugin.cancel(notificationId);
-  }
-}*/
+  @override
+  Widget build(BuildContext context) => Scaffold(
+          body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: 200.0,
+              floating: false,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                title: Text(
+                  "Notifications",
+                  style: TextStyle(
+                      letterSpacing: 1.2,
+                      color: Colors.black87,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ];
+        },
+        body: ListView(
+          children: <Widget>[
+            RaisedButton(
+              child: Text("Show notification"),
+              color: Theme.of(context).colorScheme.background,
+              onPressed: () => showOngoingNotification(notification,
+                  title: "Title", body: "Body"),
+            ),
+            RaisedButton(
+              child: Text("Show notification after 5 seconds"),
+              color: Theme.of(context).colorScheme.background,
+              onPressed: () => showScheduledNotification(notification,
+                  title: "Title", body: "Body", duration: Duration(seconds: 5)),
+            )
+          ],
+        ),
+      ));
+}
