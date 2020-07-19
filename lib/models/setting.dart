@@ -83,7 +83,7 @@ class Setting {
   Map toJson() {
     return {
       '_id': _id,
-      'weekend':_weekend,
+      'weekend': _weekend,
       'enabled': _enabled,
       'endDate': _endDate,
       'workDays': _workDays,

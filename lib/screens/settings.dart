@@ -1,3 +1,5 @@
+import 'package:remind_me/notification_manager.dart';
+
 import '../data/database_helper.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -55,81 +57,98 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
-        body: NestedScrollView(
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                SliverAppBar(
-                  expandedHeight: 200.0,
-                  floating: false,
-                  pinned: true,
-                  flexibleSpace: FlexibleSpaceBar(
-                    centerTitle: true,
-                    title: Text(
-                      "Settings",
-                      style: TextStyle(
-                          letterSpacing: 1.2,
-                          color: Colors.black87,
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.w600),
-                    ),
+      resizeToAvoidBottomPadding: false,
+      body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                expandedHeight: 200.0,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text(
+                    "Settings",
+                    style: TextStyle(
+                        letterSpacing: 1.2,
+                        color: Colors.black87,
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
-              ];
-            },
-            body: Padding(
-                padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                child: Container(
-                    child: Form(
-                  key: formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Activate Notifications",
-                          style: headerStyle,
-                        ),
-                        buildSwitchRow("Enabled", _enabled),
-                        Divider(),
-                        Text(
-                          "Select Active Days",
-                          style: headerStyle,
-                        ),
-                        buildStartWeekRow("Start Week", _startWeek),
-                        buildSwitchRow("Weekdays", _workDays),
-                        buildSwitchRow("Weekend", _weekend),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Set Active Hours",
-                          style: headerStyle,
-                        ),
-                        buildActiveHoursRow(_startDate, _endDate),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            FlatButton(
-                                padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
-                                onPressed: submitForm,
-                                color: Colors.blue,
-                                child: const Text(
-                                  'Save',
-                                  style: TextStyle(
-                                      fontSize: 20, color: Colors.white),
-                                ))
-                          ],
-                        ),
-                      ],
-                    ),
+              ),
+            ];
+          },
+          body: Padding(
+              padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+              child: Container(
+                  child: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Activate Notifications",
+                        style: headerStyle,
+                      ),
+                      buildSwitchRow("Enabled", _enabled),
+                      Divider(),
+                      Text(
+                        "Select Active Days",
+                        style: headerStyle,
+                      ),
+                      buildStartWeekRow("Start Week", _startWeek),
+                      buildSwitchRow("Weekdays", _workDays),
+                      buildSwitchRow("Weekend", _weekend),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Set Active Hours",
+                        style: headerStyle,
+                      ),
+                      buildActiveHoursRow(_startDate, _endDate),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          FlatButton(
+                              padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
+                              onPressed: submitForm,
+                              color: Colors.blue,
+                              child: const Text(
+                                'Save',
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.white),
+                              ))
+                        ],
+                      ),
+                    ],
                   ),
-                )))));
+                ),
+              )))),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 1,
+        type: BottomNavigationBarType.fixed,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), title: Text("Settings")),
+        ],
+        fixedColor: Colors.deepPurple,
+        onTap: (i) {
+          if (i == 0) {
+            Navigator.pushNamed(context, '/');
+          } else {
+            Navigator.pushNamed(context, '/settings');
+          }
+        },
+      ),
+    );
   }
 
   Future<int> getSettingId() async {
